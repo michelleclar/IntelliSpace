@@ -1,3 +1,4 @@
+import { useWorkspaceId } from "@/app/hooks/use-workspace-id";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -6,31 +7,35 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { useCreateWorkspace } from "@/features/workspaces/api/use-create-workspace";
-import { useCreateWorkspaceModal } from "@/features/workspaces/store/use-create-workspace-model";
+import { useCreateChannel } from "@/features/channels/api/use-create-channel";
+import { useCreateChannelModal } from "@/features/channels/store/use-create-channel-model";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
-export function CreateWorkspaceModal() {
-  const router = useRouter();
-  const [open, setOpen] = useCreateWorkspaceModal();
+export function CreateChannelModal() {
+  const workspaceId = useWorkspaceId();
+  const [open, setOpen] = useCreateChannelModal();
+  const { mutate, isPending } = useCreateChannel();
 
-  const { mutate, isPending } = useCreateWorkspace();
+  const [channelName, setChannelName] = useState("");
+  const handleChannge = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\s+/g, "-").toLowerCase();
+    setChannelName(value);
+  };
 
-  const [workspaceName, setWorkspaceName] = useState("");
   const handleClose = () => {
+    setChannelName("");
     setOpen(false);
-    setWorkspaceName("");
   };
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     mutate(
-      { name: workspaceName },
+      { name: channelName, workspaceId },
       {
         onSuccess(id) {
-          toast.success("Workspace created successfully");
-          router.push(`/workspace/${id}`);
+          // toast.success("Workspace created successfully");
+          // router.push(`/workspace/${id}`);
           handleClose();
         },
         onError(error) {},
@@ -43,17 +48,18 @@ export function CreateWorkspaceModal() {
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add a workspace</DialogTitle>
+          <DialogTitle>Add a channel</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input
-            value={workspaceName}
+            value={channelName}
             disabled={isPending}
-            onChange={(e) => setWorkspaceName(e.target.value)}
+            onChange={handleChannge}
             required
             autoFocus
             minLength={3}
-            placeholder="Workspace name e.g. 'Work','Personal','Home'"
+            maxLength={80}
+            placeholder="e.g. plan-budge "
           />
           <div className="flex justify-end">
             <Button disabled={isPending}>Create</Button>

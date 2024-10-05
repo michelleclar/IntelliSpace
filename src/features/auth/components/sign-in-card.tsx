@@ -14,6 +14,7 @@ import { SignInFlow } from "@/features/auth/types";
 import React, { useState } from "react";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { TriangleAlert } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface SignInCardProps {
   setState: (state: SignInFlow) => void;
@@ -25,6 +26,7 @@ export const SignInCard = ({ setState }: SignInCardProps) => {
   const [password, setPassword] = useState("");
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
+  const router = useRouter();
 
   const onPasswordSignIn = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -36,6 +38,7 @@ export const SignInCard = ({ setState }: SignInCardProps) => {
       .finally(() => {
         setPending(false);
       });
+    router.refresh();
   };
 
   const onProviderSignIn = (value: "github" | "google") => {

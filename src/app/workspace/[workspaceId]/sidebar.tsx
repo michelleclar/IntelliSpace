@@ -13,7 +13,7 @@ export const Sidebar = () => {
         // TODO:  can update
         icon={Home}
         label="Home"
-        isActive={pathname.includes("/woekspace")}
+        isActive={pathname.includes("/workspace")}
       />
       <SidebarButton icon={MessagesSquare} label="DMs" />
       <SidebarButton icon={Bell} label="Activity" />
