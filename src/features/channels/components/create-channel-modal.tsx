@@ -1,4 +1,4 @@
-import { useWorkspaceId } from "@/app/hooks/use-workspace-id";
+import { useWorkspaceId } from "@/hooks/use-workspace-id";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -14,6 +14,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 export function CreateChannelModal() {
+  const router = useRouter();
   const workspaceId = useWorkspaceId();
   const [open, setOpen] = useCreateChannelModal();
   const { mutate, isPending } = useCreateChannel();
@@ -34,11 +35,13 @@ export function CreateChannelModal() {
       { name: channelName, workspaceId },
       {
         onSuccess(id) {
-          // toast.success("Workspace created successfully");
-          // router.push(`/workspace/${id}`);
+          toast.success("Channel created successfully");
+          router.push(`/workspace/${workspaceId}/channel/${id}`);
           handleClose();
         },
-        onError(error) {},
+        onError(error) {
+          toast.error("Failed to create channel");
+        },
         onSettled() {},
       },
     );

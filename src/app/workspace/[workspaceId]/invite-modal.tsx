@@ -1,5 +1,5 @@
 import { useNewJoinCode } from "@/features/workspaces/api/use-new-join-code";
-import { useWorkspaceId } from "@/app/hooks/use-workspace-id";
+import { useWorkspaceId } from "@/hooks/use-workspace-id";
 
 import {
   Dialog,
@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { CopyIcon, RefreshCcw } from "lucide-react";
-import { useConfirm } from "@/app/hooks/use-confirm";
+import { useConfirm } from "@/hooks/use-confirm";
 import { DialogClose } from "@radix-ui/react-dialog";
 
 import { toast } from "sonner";

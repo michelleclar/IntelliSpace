@@ -2,7 +2,7 @@ import { LucideIcon } from "lucide-react";
 import { IconType } from "react-icons/lib";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { useWorkspaceId } from "@/app/hooks/use-workspace-id";
+import { useWorkspaceId } from "@/hooks/use-workspace-id";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 

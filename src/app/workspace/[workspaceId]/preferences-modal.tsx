@@ -15,8 +15,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
-import { useConfirm } from "@/app/hooks/use-confirm";
-import { useWorkspaceId } from "@/app/hooks/use-workspace-id";
+import { useConfirm } from "@/hooks/use-confirm";
+import { useWorkspaceId } from "@/hooks/use-workspace-id";
 import { useUpdateWorkspace } from "@/features/workspaces/api/use-update-workspace";
 import { useRemoveWorkspace } from "@/features/workspaces/api/use-remove-workspace";
 
