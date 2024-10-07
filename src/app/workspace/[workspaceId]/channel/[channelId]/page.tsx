@@ -33,7 +33,7 @@ const ChannelIdPage = () => {
     <div className="flex-col flex h-full">
       <Header title={channel.name} />
       <div className="flex-1" />
-      <ChatInput />
+      <ChatInput placeholder={`Messsage # ${channel.name}`} />
     </div>
   );
 };
