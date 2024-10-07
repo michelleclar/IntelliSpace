@@ -1,6 +1,7 @@
 "use client";
 
-import { Header } from "@/app/workspace/[workspaceId]/channel/[channelId]/header";
+import { ChatInput } from "./chat-input";
+import { Header } from "./header";
 import { useGetChannel } from "@/features/channels/api/use-get-channle";
 import { useChannelId } from "@/hooks/use-channel-id";
 import { Loader, TriangleAlert } from "lucide-react";
@@ -31,6 +32,8 @@ const ChannelIdPage = () => {
   return (
     <div className="flex-col flex h-full">
       <Header title={channel.name} />
+      <div className="flex-1" />
+      <ChatInput />
     </div>
   );
 };

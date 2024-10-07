@@ -5,7 +5,7 @@ interface UseGetChannlesProps {
   id: Id<"workspaces">;
 }
 export const useGetChannels = ({ id }: UseGetChannlesProps) => {
-  const channels = useQuery(api.channles.get, { workspaceId: id });
+  const channels = useQuery(api.channels.get, { workspaceId: id });
   const isLoading = channels === void 0;
 
   return { channels, isLoading };
