@@ -25,7 +25,7 @@ export function UserButton() {
     return null;
   }
 
-  const router = useRouter();
+  // const router = useRouter();
   const { image, name, email } = user;
   const avatarFallback = name!.charAt(0).toUpperCase();
   return (
@@ -43,7 +43,7 @@ export function UserButton() {
           onClick={() => {
             signOut();
             // router.refresh();
-            router.replace("/");
+            // router.replace("/");
           }}
           className="h-10"
         >
