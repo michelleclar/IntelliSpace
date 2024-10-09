@@ -22,7 +22,7 @@ export const WorkspaceSection = ({
   return (
     <div className="flex flex-col mt-3 px-2 ">
       <div
-        // TODO::need check
+        // FIX :need check
         className="flex items-center px-2.5 group"
       >
         <Button
@@ -37,7 +37,7 @@ export const WorkspaceSection = ({
         <Button
           variant="transparent"
           size="sm"
-          // TODO::need check
+          // FIX :need check
           className="group px-0.5 text-sm text-[#f9edffcc] h-[28px] justify-start overflow-hidden items-center"
         >
           <span className="truncate">{label}</span>
