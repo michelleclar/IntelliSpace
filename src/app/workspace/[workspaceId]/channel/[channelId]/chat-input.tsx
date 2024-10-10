@@ -24,8 +24,8 @@ type CreateMessageValues = {
 };
 
 export const ChatInput = ({ placeholder }: ChatInputProps) => {
-  const [editorKey, setEditorKey] = useState(0);
   const editorRef = useRef<Quill | null>(null);
+  const [editorKey, setEditorKey] = useState(0);
   const [isPending, setIsPending] = useState(false);
   const { mutate: createMessage } = useCreateMessage();
   const { mutate: generateUploadUrl } = useGenerateUploadUrl();

@@ -1,8 +1,6 @@
 import { usePaginatedQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { Id } from "../../../../convex/_generated/dataModel";
-import { useState } from "react";
-import { type } from "os";
 
 const BATCH_SIZE = 20;
 type Options = {
