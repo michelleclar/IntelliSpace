@@ -39,14 +39,7 @@ export function UserButton() {
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="center" side="right" className="w-60">
-        <DropdownMenuItem
-          onClick={() => {
-            signOut();
-            // router.refresh();
-            // router.replace("/");
-          }}
-          className="h-10"
-        >
+        <DropdownMenuItem onClick={() => void signOut()} className="h-10">
           <LogOut className="size-4 mr-2" />
           Log out
         </DropdownMenuItem>

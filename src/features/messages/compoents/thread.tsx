@@ -202,6 +202,7 @@ export const Thread = ({ messageId, onClose }: ThreadProps) => {
                     threadCount={message.threadCount}
                     threadImage={message.threadImage}
                     threadTimestamp={message.threadTimestamp}
+                    threadName={message.threadName}
                   />
                 );
               })}
@@ -246,6 +247,7 @@ export const Thread = ({ messageId, onClose }: ThreadProps) => {
           id={message._id}
           reactions={message.reactions}
           isEditing={editingId === message._id}
+          // threadName={message.threadName}
           setEditingId={setEditingId}
         />
       </div>
