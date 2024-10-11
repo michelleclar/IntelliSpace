@@ -4,7 +4,7 @@ import { useCallback, useMemo, useState } from "react";
 
 type ResponsseType = string | null;
 type Options = {
-  onSuccess?: (data: any) => void;
+  onSuccess?: (data: never) => void;
   onError?: (error: Error) => void;
   onSettled?: () => void;
   throwError?: boolean;
@@ -25,7 +25,7 @@ export const useGenerateUploadUrl = () => {
   const mutation = useMutation(api.upload.generateUploadUrl);
 
   const mutate = useCallback(
-    async (_values: {}, options?: Options) => {
+    async (_values: object, options?: Options) => {
       try {
         setData(null);
         setError(null);
@@ -33,6 +33,8 @@ export const useGenerateUploadUrl = () => {
         setStatus("pending");
 
         const response = await mutation();
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
         options?.onSuccess?.(response);
         return response;
       } catch (error) {

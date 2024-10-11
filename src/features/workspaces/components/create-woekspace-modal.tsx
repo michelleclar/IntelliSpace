@@ -33,6 +33,7 @@ export function CreateWorkspaceModal() {
           router.push(`/workspace/${id}`);
           handleClose();
         },
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         onError(error) {},
         onSettled() {},
       },

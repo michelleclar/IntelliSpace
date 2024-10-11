@@ -4,7 +4,6 @@ import {
   DialogContent,
 } from "@/components/ui/dialog";
 
-/* eslint-disable @next/next/no-img-elememt */
 interface ThumbnailsProps {
   url: string | null | undefined;
 }

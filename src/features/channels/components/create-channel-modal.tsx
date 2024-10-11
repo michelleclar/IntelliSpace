@@ -39,6 +39,7 @@ export function CreateChannelModal() {
           router.push(`/workspace/${workspaceId}/channel/${id}`);
           handleClose();
         },
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         onError(error) {
           toast.error("Failed to create channel");
         },

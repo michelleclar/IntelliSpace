@@ -94,7 +94,7 @@ export const Thread = ({ messageId, onClose }: ThreadProps) => {
         });
 
         if (!result.ok) {
-          throw new Error("Failed to uoload image");
+          throw new Error("Failed to upload image");
         }
 
         const { storageId } = await result.json();
@@ -102,6 +102,7 @@ export const Thread = ({ messageId, onClose }: ThreadProps) => {
       }
       await createMessage(values, { throwError: true });
       setEditorKey((prevKey) => prevKey + 1);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       toast.error("Failed to send message");
     } finally {

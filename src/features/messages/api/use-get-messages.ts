@@ -3,13 +3,6 @@ import { api } from "../../../../convex/_generated/api";
 import { Id } from "../../../../convex/_generated/dataModel";
 
 const BATCH_SIZE = 20;
-type Options = {
-  onSuccess?: (data: ResponseType) => void;
-  onError?: (error: Error) => void;
-  onSettled?: () => void;
-  throwError?: boolean;
-};
-
 interface UseGetMessagesProps {
   channelId?: Id<"channels">;
   conversationId?: Id<"conversations">;

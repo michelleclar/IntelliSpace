@@ -1,7 +1,7 @@
-import { v } from "convex/values";
-import { mutation, query, QueryCtx } from "./_generated/server";
-import { getAuthUserId } from "@convex-dev/auth/server";
-import { Fields } from "../fields";
+import {v} from "convex/values";
+import {mutation} from "./_generated/server";
+import {getAuthUserId} from "@convex-dev/auth/server";
+import {Fields} from "../fields";
 
 export const createOrGet = mutation({
   args: {
@@ -45,12 +45,10 @@ export const createOrGet = mutation({
       return existingConversation._id;
     }
 
-    const conversationId = await ctx.db.insert("conversations", {
+    return await ctx.db.insert("conversations", {
       workspaceId: args.workspaceId,
       memberOneId: currentMember._id,
       memberTwoId: otherMember._id,
     });
-
-    return conversationId;
   },
 });
