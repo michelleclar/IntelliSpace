@@ -1,26 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Id } from "../../../../convex/_generated/dataModel";
 import { AlertTriangle, Loader, MailIcon, XIcon } from "lucide-react";
-import { useGetMessage } from "@/features/messages/api/use-get-message";
-import { Message } from "@/components/message";
-import { useCurrentMember } from "@/features/members/api/use-current-member";
-import { useWorkspaceId } from "@/hooks/use-workspace-id";
-import { useRef, useState } from "react";
-import dynamic from "next/dynamic";
-import Quill from "quill";
-import { useCreateMessage } from "@/features/messages/api/use-create-message";
-import { useGenerateUploadUrl } from "@/features/upload/api/use-generate-upload-url";
-import { useChannelId } from "@/hooks/use-channel-id";
-import { toast } from "sonner";
-import { useGetMessages } from "@/features/messages/api/use-get-messages";
-import { format } from "date-fns/format";
-import { differenceInMinutes, isToday, isYesterday } from "date-fns";
 import { useGetMember } from "@/features/members/api/use-get-member";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 
-const TIME_THRESHOLD = 5;
 interface ProfileProps {
   memberId: Id<"members">;
   onClose: () => void;
