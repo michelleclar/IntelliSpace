@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ImageIcon, Keyboard, Smile, XIcon } from "lucide-react";
+import { ImageIcon, Smile, XIcon } from "lucide-react";
 import Quill, { type QuillOptions } from "quill";
 import "quill/dist/quill.snow.css";
 import {

@@ -1,8 +1,6 @@
-import { useWorkspaceId } from "@/hooks/use-workspace-id";
 import { Button } from "@/components/ui/button";
-import { useGetWorkspace } from "@/features/workspaces/api/use-get-workspace";
 import { cn } from "@/lib/utils";
-import { Info, LucideIcon, Search } from "lucide-react";
+import { LucideIcon } from "lucide-react";
 import { IconType } from "react-icons/lib";
 interface SibebarButtonProps {
   icon: LucideIcon | IconType;

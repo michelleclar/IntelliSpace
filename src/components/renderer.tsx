@@ -31,7 +31,7 @@ export const Renderer = ({ value }: RendererProps) => {
         container.innerHTML = "";
       }
     };
-  }, [isEmpty, setIsEmpty]);
+  }, [value,isEmpty, setIsEmpty]);
 
   return <div ref={rendererRef} className="ql-editor ql-renderer" />;
 };

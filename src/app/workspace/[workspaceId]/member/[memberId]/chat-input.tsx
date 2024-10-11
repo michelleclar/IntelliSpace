@@ -71,6 +71,7 @@ export const ChatInput = ({ placeholder, conversationId }: ChatInputProps) => {
       }
       await createMessage(values, { throwError: true });
       setEditorKey((prevKey) => prevKey + 1);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       toast.error("Failed to send message");
     } finally {

@@ -23,6 +23,7 @@ export const WorkspaceSidebar = () => {
   const workspaceId = useWorkspaceId();
   const memberId = useMemberId();
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_open, setChannelOpen] = useCreateChannelModal();
   const { member, isLoading: memberIsLoading } = useCurrentMember({
     workspaceId,
@@ -39,7 +40,7 @@ export const WorkspaceSidebar = () => {
     workspaceId,
   });
 
-  if (workspaceIsLoading || memberIsLoading) {
+  if (workspaceIsLoading || memberIsLoading || channlesIsLoading || membersIsLoading) {
     return (
       <div className="flex flex-col bg-[#5E2C5F] h-full items-center justify-center">
         <Loader className="size-5 animate-spin text-white" />
@@ -66,13 +67,13 @@ export const WorkspaceSidebar = () => {
         <SidebarItem
           label="Threads"
           icon={MessageSquareText}
-          id="threads"
+          id={channelId}
           variant="default"
         />
         <SidebarItem
           label="Drafts & Sent"
           icon={SendHorizonal}
-          id="Drafts"
+          id={channelId}
           variant="default"
         />
       </div>
