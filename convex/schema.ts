@@ -37,7 +37,7 @@ const schema = defineSchema({
     updatedAt: v.optional(v.number()),
   })
     .index("by_workspace_id", ["workspaceId"])
-    .index("by_member", ["memberId"])
+    .index("by_member_id", ["memberId"])
     .index("by_channel_id", ["channelId"])
     .index("by_conversation_id", ["conversationId"])
     .index("by_parent_message_id", ["parentMessageId"])
@@ -53,7 +53,7 @@ const schema = defineSchema({
     value: v.string(),
   })
     .index("by_workspace_id", ["workspaceId"])
-    .index("by_member", ["memberId"])
+    .index("by_member_id", ["memberId"])
     .index("by_message_id", ["messageId"]),
 });
 

@@ -3,8 +3,10 @@ import { api } from "../../../../convex/_generated/api";
 import { useCallback, useMemo, useState } from "react";
 import { Id } from "../../../../convex/_generated/dataModel";
 
-type ResponseType = Id<"channels"> | null;
-type RequestType = { id: Id<"channels"> };
+type ResponseType = Id<"members"> | null;
+type RequestType = {
+  id: Id<"members">;
+};
 
 type Options = {
   onSuccess?: (data: ResponseType) => void;
@@ -12,7 +14,7 @@ type Options = {
   onSettled?: () => void;
   throwError?: boolean;
 };
-export const useRemoveChannel = () => {
+export const useRemoveMenmber = () => {
   const [data, setData] = useState<ResponseType>(null);
   const [error, setError] = useState<Error | null>(null);
 
@@ -25,7 +27,7 @@ export const useRemoveChannel = () => {
   const isError = useMemo(() => status === "error", [status]);
   const isSettled = useMemo(() => status === "settled", [status]);
 
-  const mutation = useMutation(api.channels.remove);
+  const mutation = useMutation(api.members.remove);
 
   const mutate = useCallback(
     async (values: RequestType, options?: Options) => {

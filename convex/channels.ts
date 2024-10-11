@@ -29,7 +29,7 @@ export const update = mutation({
   },
 });
 
-export const remoe = mutation({
+export const remove = mutation({
   args: {
     id: v.id("channels"),
   },
