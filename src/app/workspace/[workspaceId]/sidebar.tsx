@@ -1,7 +1,13 @@
 import { SidebarButton } from "./sidebar-button";
 import { WorkspaceSwitcher } from "@/app/workspace/[workspaceId]/workspace-switcher";
 import { UserButton } from "@/features/auth/components/user-button";
-import { Bell, Home, MessagesSquare, MoreHorizontal } from "lucide-react";
+import {
+  Bell,
+  Home,
+  MessagesSquare,
+  MoreHorizontal,
+  Palette,
+} from "lucide-react";
 import { usePathname } from "next/navigation";
 
 export const Sidebar = () => {
@@ -15,9 +21,24 @@ export const Sidebar = () => {
         label="Home"
         isActive={pathname.includes("/workspace")}
       />
-      <SidebarButton icon={MessagesSquare} label="DMs" />
-      <SidebarButton icon={Bell} label="Activity" />
-      <SidebarButton icon={MoreHorizontal} label="More" />
+      <SidebarButton
+        icon={Palette}
+        label="Canva"
+        isActive={pathname.includes("/canva")}
+      />
+      <SidebarButton icon={MessagesSquare} label="DMs" className="hidden" />
+      <SidebarButton
+        //TODO: not implemented yet 'Activty'
+        icon={Bell}
+        label="Activity"
+        className="hidden"
+      />
+      <SidebarButton
+        //TODO: not implemented yet 'Activty'
+        icon={MoreHorizontal}
+        label="More"
+        className="hidden"
+      />
       <div className="flex flex-col items-center justify-center gap-y-1 mt-auto">
         <UserButton />
       </div>
