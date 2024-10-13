@@ -72,7 +72,7 @@ const Canvas = ({ defaultValue, innerRef, id }: CanvasProps) => {
 
   const handleUpload = () => {
     const _appState = innerRef.current?.getAppState();
-    let appState = _appState ? JSON.parse(JSON.stringify(_appState)) : "";
+    const appState = _appState ? JSON.parse(JSON.stringify(_appState)) : "";
     console.log(appState);
     appState["collaborators"] = [];
 
