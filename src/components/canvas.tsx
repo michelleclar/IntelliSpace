@@ -1,31 +1,31 @@
 "use client";
 import {
-  Excalidraw,
-  convertToExcalidrawElements,
+    Excalidraw,
 } from "@excalidraw/excalidraw";
 import {
-  ExcalidrawImperativeAPI,
-  type ExcalidrawInitialDataState,
+    ExcalidrawImperativeAPI,
+    type ExcalidrawInitialDataState,
 } from "@excalidraw/excalidraw/types/types";
-import { MutableRefObject, useState } from "react";
-import { Id } from "../../convex/_generated/dataModel";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { useUpdateCanvas } from "@/features/canvas/api/use-update-canvas";
-import { toast } from "sonner";
+import {MutableRefObject} from "react";
+import {Id} from "../../convex/_generated/dataModel";
+import {Button} from "@/components/ui/button";
+import {cn} from "@/lib/utils";
+import {useUpdateCanvas} from "@/features/canvas/api/use-update-canvas";
+import {toast} from "sonner";
 
 // import "@excalidraw/excalidraw/index.css";
 type CanvasValue = {
-  layout: string;
-  body: string;
+    layout: string;
+    body: string;
 };
+
 interface CanvasProps {
-  variant?: "create" | "update";
-  defaultValue?: ExcalidrawInitialDataState;
-  disabled?: boolean;
-  innerRef: MutableRefObject<ExcalidrawImperativeAPI | null>;
-  id: Id<"canvases">;
-  onSave?: ({ layout, body }: CanvasValue) => void;
+    variant?: "create" | "update";
+    defaultValue?: ExcalidrawInitialDataState;
+    disabled?: boolean;
+    innerRef: MutableRefObject<ExcalidrawImperativeAPI | null>;
+    id: Id<"canvases">;
+    onSave?: ({layout, body}: CanvasValue) => void;
 }
 
 // export interface ExcalidrawProps {
@@ -70,63 +70,60 @@ interface CanvasProps {
 // }
 
 const Canvas = ({
-  variant = "create",
-  defaultValue,
-  disabled,
-  innerRef,
-  onSave,
-  id,
-}: CanvasProps) => {
-  const { mutate, isPending } = useUpdateCanvas();
-  const handleUpload = () => {
-    const appState = innerRef.current?.getAppState();
-    const elements = innerRef.current?.getSceneElements();
-    const files = innerRef.current?.getFiles();
-    const layout = JSON.stringify({ appState, elements, files });
+                    defaultValue,
+                    innerRef,
+                    id,
+                }: CanvasProps) => {
+    const {mutate, isPending} = useUpdateCanvas();
+    const handleUpload = () => {
+        const appState = innerRef.current?.getAppState();
+        const elements = innerRef.current?.getSceneElements();
+        const files = innerRef.current?.getFiles();
+        const layout = JSON.stringify({appState, elements, files});
 
-    mutate(
-      { id, layout },
-      {
-        onSuccess: () => {
-          toast.success("upload success");
-        },
-        onError: () => {
-          toast.error("Flied upload");
-        },
-      },
-    );
-  };
-  return (
-    <Excalidraw
-      initialData={defaultValue}
-      onChange={(elements, appState, files) => {
-        if (!elements || !elements.length) {
-          return;
-        }
-        const value = { elements, appState, files };
-        localStorage.setItem(id, JSON.stringify(value));
-        console.log(appState.theme);
-      }}
-      excalidrawAPI={(api) => (innerRef.current = api)}
-      renderTopRightUI={() => {
-        return (
-          <Button
-            variant={"ghost"}
-            onClick={handleUpload}
-            className={cn(
-              "text-sm",
-              innerRef.current?.getAppState().theme === "light"
-                ? "bg-[#ECECF4] text-[#1B1B1F]"
-                : "bg-[#232329] text-[#E3E3E8]",
-            )}
-            disabled={isPending}
-          >
-            upload
-          </Button>
+        mutate(
+            {id, layout},
+            {
+                onSuccess: () => {
+                    toast.success("upload success");
+                },
+                onError: () => {
+                    toast.error("Flied upload");
+                },
+            },
         );
-      }}
-    />
-  );
+    };
+    return (
+        <Excalidraw
+            initialData={defaultValue}
+            onChange={(elements, appState, files) => {
+                if (!elements || !elements.length) {
+                    return;
+                }
+                const value = {elements, appState, files};
+                localStorage.setItem(id, JSON.stringify(value));
+                console.log(appState.theme);
+            }}
+            excalidrawAPI={(api) => (innerRef.current = api)}
+            renderTopRightUI={() => {
+                return (
+                    <Button
+                        variant={"ghost"}
+                        onClick={handleUpload}
+                        className={cn(
+                            "text-sm",
+                            innerRef.current?.getAppState().theme === "light"
+                                ? "bg-[#ECECF4] text-[#1B1B1F]"
+                                : "bg-[#232329] text-[#E3E3E8]",
+                        )}
+                        disabled={isPending}
+                    >
+                        upload
+                    </Button>
+                );
+            }}
+        />
+    );
 };
 
 export default Canvas;

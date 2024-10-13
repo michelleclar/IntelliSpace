@@ -5,8 +5,7 @@ import {
   Bell,
   Home,
   MessagesSquare,
-  MoreHorizontal,
-  Palette,
+  MoreHorizontal
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 

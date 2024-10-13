@@ -1,12 +1,9 @@
-import { LucideIcon, PenLine } from "lucide-react";
+import { LucideIcon } from "lucide-react";
 import { IconType } from "react-icons/lib";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { useWorkspaceId } from "@/hooks/use-workspace-id";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
-import { Hint } from "@/components/hint";
 
 const sidebarItemVariants = cva(
   "flex items-center gap-1.5 justify-start font-normal h-7 px-[18px] text-sm overflow-hidden",

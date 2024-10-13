@@ -30,6 +30,7 @@ export const WorkspaceSidebar = () => {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_open, setChannelOpen] = useCreateChannelModal();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, setCanvasOpen] = useCreateCanvasModal();
   const { member, isLoading: memberIsLoading } = useCurrentMember({
     workspaceId,
@@ -46,7 +47,7 @@ export const WorkspaceSidebar = () => {
     workspaceId,
   });
 
-  const { canvases, isLoading: canvasesIsLoading } = useGetCanvases({
+  const { canvases} = useGetCanvases({
     id: workspaceId,
   });
 

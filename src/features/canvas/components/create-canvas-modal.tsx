@@ -10,7 +10,7 @@ import { useCreateCanvas } from "@/features/canvas/api/use-create-canvas";
 import { useCreateCanvasModal } from "@/features/canvas/store/use-create-canvas-model";
 import { useWorkspaceId } from "@/hooks/use-workspace-id";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import React, { useState } from "react";
 import { toast } from "sonner";
 
 export function CreateCanvasModal() {
@@ -41,8 +41,7 @@ export function CreateCanvasModal() {
           router.push(`/workspace/${workspaceId}/canvas/${id}`);
           handleClose();
         },
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        onError(error) {
+        onError() {
           toast.error("Failed to create canvas");
         },
         onSettled() {},
