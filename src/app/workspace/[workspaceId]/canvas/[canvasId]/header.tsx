@@ -156,7 +156,7 @@ export const Header = ({ title, id }: HeaderProps) => {
               >
                 <TrashIcon className="size-4" />
 
-                <p className="text-sm font-semibold">Delete channel</p>
+                <p className="text-sm font-semibold">Delete canvas</p>
               </button>
             )}
           </div>

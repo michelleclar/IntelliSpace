@@ -1,11 +1,15 @@
 "use client";
 import dynamic from "next/dynamic";
-import { useRef } from "react";
-import { ExcalidrawImperativeAPI } from "@excalidraw/excalidraw/types/types";
+import { useEffect, useRef } from "react";
+import {
+  ExcalidrawImperativeAPI,
+  type ExcalidrawInitialDataState,
+} from "@excalidraw/excalidraw/types/types";
 import { useCanvasId } from "@/hooks/use-canvas-id";
 import { Header } from "@/app/workspace/[workspaceId]/canvas/[canvasId]/header";
 import { useGetCanvas } from "@/features/canvas/api/use-get-canvas";
 import { Loader, TriangleAlert } from "lucide-react";
+import { convertToExcalidrawElements } from "@excalidraw/excalidraw";
 
 export default function Home() {
   const id = useCanvasId();
@@ -36,10 +40,19 @@ export default function Home() {
       </div>
     );
   }
+
   return (
     <div className="flex-col flex h-full">
       <Header id={id} title={canvas?.name} />
-      <Canvas innerRef={canvasRef} id={id} />
+      <Canvas
+        defaultValue={
+          canvas.layout === undefined
+            ? canvas.layout
+            : JSON.parse(canvas.layout)
+        }
+        innerRef={canvasRef}
+        id={id}
+      />
     </div>
   );
 }
