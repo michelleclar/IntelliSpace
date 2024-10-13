@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { useWorkspaceId } from "@/hooks/use-workspace-id";
 import { cn } from "@/lib/utils";
 import { LucideIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -9,6 +8,7 @@ interface SibebarButtonProps {
   label: string;
   isActive?: boolean;
   className?: string;
+  onClick?: () => void;
 }
 export const SidebarButton = ({
   icon: Icon,
@@ -31,14 +31,8 @@ export const SidebarButton = ({
           isActive && "bg-accent/20",
         )}
         onClick={() => {
-          if (isActive) return;
-          if (label === "Home") {
-            route.push(`/`);
-            return;
-          }
-          if (label === "Canva") {
-            const workspaceId = useWorkspaceId();
-            route.push(`/workspace/${workspaceId}/canva`);
+          if (label === "Canvases") {
+            route.push(`/canvas`);
             return;
           }
         }}

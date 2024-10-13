@@ -3,6 +3,7 @@ import {
   HashIcon,
   Loader,
   MessageSquareText,
+  Palette,
   SendHorizonal,
 } from "lucide-react";
 import { useWorkspaceId } from "@/hooks/use-workspace-id";
@@ -17,14 +18,19 @@ import { UserItem } from "@/app/workspace/[workspaceId]/user-item";
 import { useCreateChannelModal } from "@/features/channels/store/use-create-channel-model";
 import { useChannelId } from "@/hooks/use-channel-id";
 import { useMemberId } from "@/hooks/use-member-id";
+import { useGetCanvases } from "@/features/canvas/api/use-get-canvases";
+import { useCreateCanvasModal } from "@/features/canvas/store/use-create-canvas-model";
+import { useCanvasId } from "@/hooks/use-canvas-id";
 
 export const WorkspaceSidebar = () => {
   const channelId = useChannelId();
   const workspaceId = useWorkspaceId();
   const memberId = useMemberId();
+  const canvasId = useCanvasId();
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_open, setChannelOpen] = useCreateChannelModal();
+  const [_, setCanvasOpen] = useCreateCanvasModal();
   const { member, isLoading: memberIsLoading } = useCurrentMember({
     workspaceId,
   });
@@ -38,6 +44,10 @@ export const WorkspaceSidebar = () => {
 
   const { members, isLoading: membersIsLoading } = useGetMembers({
     workspaceId,
+  });
+
+  const { canvases, isLoading: canvasesIsLoading } = useGetCanvases({
+    id: workspaceId,
   });
 
   if (
@@ -70,18 +80,16 @@ export const WorkspaceSidebar = () => {
       />
       <div
         //TODO: Not yet implemented Threads and Drafts & sent
-        className="flex-col px-2 mt-3 hidden"
+        className="flex-col px-2 mt-3 flex"
       >
         <SidebarItem
           label="Threads"
           icon={MessageSquareText}
-          id={channelId}
           variant="default"
         />
         <SidebarItem
           label="Drafts & Sent"
           icon={SendHorizonal}
-          id={channelId}
           variant="default"
         />
       </div>
@@ -101,8 +109,29 @@ export const WorkspaceSidebar = () => {
             key={item._id}
             icon={HashIcon}
             label={item.name}
-            id={item._id}
             variant={channelId === item._id ? "active" : "default"}
+            redirect={`/workspace/${workspaceId}/channel/${item._id}`}
+          />
+        ))}
+      </WorkspaceSection>
+      <WorkspaceSection
+        label="Canvases"
+        hint="New Canvas"
+        onNew={
+          member.role === "admin"
+            ? () => {
+                setCanvasOpen(true);
+              }
+            : void 0
+        }
+      >
+        {canvases?.map((item) => (
+          <SidebarItem
+            key={item._id}
+            icon={Palette}
+            label={item.name}
+            variant={canvasId === item._id ? "active" : "default"}
+            redirect={`/workspace/${workspaceId}/canvas/${item._id}`}
           />
         ))}
       </WorkspaceSection>

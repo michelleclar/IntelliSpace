@@ -55,6 +55,11 @@ const schema = defineSchema({
     .index("by_workspace_id", ["workspaceId"])
     .index("by_member_id", ["memberId"])
     .index("by_message_id", ["messageId"]),
+  canvases: defineTable({
+    workspaceId: v.id("workspaces"),
+    name: v.string(),
+    layout: v.optional(v.string()),
+  }).index("by_workspace_id", ["workspaceId"]),
 });
 
 export default schema;

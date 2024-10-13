@@ -21,11 +21,6 @@ export const Sidebar = () => {
         label="Home"
         isActive={pathname.includes("/workspace")}
       />
-      <SidebarButton
-        icon={Palette}
-        label="Canva"
-        isActive={pathname.includes("/canva")}
-      />
       <SidebarButton icon={MessagesSquare} label="DMs" className="hidden" />
       <SidebarButton
         //TODO: not implemented yet 'Activty'
