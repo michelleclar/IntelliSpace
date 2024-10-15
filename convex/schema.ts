@@ -60,6 +60,9 @@ const schema = defineSchema({
     name: v.string(),
     layout: v.optional(v.string()),
   }).index("by_workspace_id", ["workspaceId"]),
+  systemconfig: defineTable({
+    aiApiToken: v.string(),
+  }),
 });
 
 export default schema;
