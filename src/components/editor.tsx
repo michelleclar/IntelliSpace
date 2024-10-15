@@ -60,7 +60,7 @@ interface EditorProps {
         image,
       }: {
         userMessage: string;
-        text: string;
+        text: string| undefined;
         image: File | null;
       }) => void;
     }[];
@@ -310,7 +310,7 @@ export const Editor = ({
                               userMessage: JSON.stringify(
                                 quillRef.current?.getContents(),
                               ),
-                              text: quillRef.current?.getText()!,
+                              text: quillRef.current?.getText(),
                               image,
                             });
 
