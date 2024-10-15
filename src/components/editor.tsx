@@ -62,7 +62,7 @@ interface EditorProps {
         userMessage: string;
         text: string;
         image: File | null;
-      }) => {};
+      }) => void;
     }[];
   };
 }
@@ -391,18 +391,6 @@ export const Editor = ({
     </div>
   );
 };
-const AI = [
-  {
-    value: "transition",
-    label: "Transition",
-    icon: Languages,
-  },
-  {
-    value: "question",
-    label: "Question",
-    icon: MessageCircleQuestion,
-  },
-];
 const AIItem = ({
   label,
   icon: Icon,

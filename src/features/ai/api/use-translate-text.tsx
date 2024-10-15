@@ -1,4 +1,3 @@
-import Ollama from "ollama/browser";
 // import { Ollama } from "ollama";
 
 /*

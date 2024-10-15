@@ -32,22 +32,6 @@ type AiReplyProps = {
   image: File | null;
 };
 
-const handelTranslateText = async (message: string) => {
-  const choice = await useTranslateText(message);
-  const aiReply = choice?.message.content;
-  const body = {
-    ops: [
-      {
-        attributes: {
-          bold: true,
-        },
-        insert: `${aiReply}`,
-      },
-    ],
-  };
-  return body;
-};
-
 export const ChatInput = ({ placeholder }: ChatInputProps) => {
   const editorRef = useRef<Quill | null>(null);
   const [editorKey, setEditorKey] = useState(0);
@@ -61,7 +45,21 @@ export const ChatInput = ({ placeholder }: ChatInputProps) => {
   //   await createMessage(values, { throwError: true });
   //   setEditorKey((prevKey) => prevKey + 1);
   // };
-
+  const handelTranslateText = async (message: string) => {
+    const choice = await useTranslateText(message);
+    const aiReply = choice?.message.content;
+    const body = {
+      ops: [
+        {
+          attributes: {
+            bold: true,
+          },
+          insert: `${aiReply}`,
+        },
+      ],
+    };
+    return body;
+  };
   const handelSubmit = async ({
     body,
     image,
@@ -171,6 +169,7 @@ export const ChatInput = ({ placeholder }: ChatInputProps) => {
           setEditorKey((prevKey) => prevKey + 0);
         } catch (error) {
           toast.error("Ai Failed to reply message");
+          console.log(error)
         } finally {
           setIsPending(false);
           editorRef.current?.enable(true);
