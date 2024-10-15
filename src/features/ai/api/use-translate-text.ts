@@ -23,7 +23,7 @@ curl -X POST "https://models.inference.ai.azure.com/chat/completions" \
 
 */
 const token = process.env.NEXT_PUBLIC_GITHUB_TOKEN;
-// "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";
+
 const DefaultOptions: RequestInit = {
   method: "POST",
   mode: "cors", // no-cors, *cors, same-origin
