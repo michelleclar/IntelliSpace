@@ -53,7 +53,7 @@ export const ChatInput = ({placeholder}: ChatInputProps) => {
         // eslint-disable-next-line react-hooks/rules-of-hooks
         const choice = await useTranslateText({content: message, token: systemconfig.aiApiToken});
         const aiReply = choice?.message.content;
-        const body = {
+        return {
             ops: [
                 {
                     attributes: {
@@ -63,7 +63,6 @@ export const ChatInput = ({placeholder}: ChatInputProps) => {
                 },
             ],
         };
-        return body;
     };
     const handelSubmit = async ({
                                     body,
@@ -172,7 +171,7 @@ export const ChatInput = ({placeholder}: ChatInputProps) => {
                         },
                         throwError: true,
                     });
-                    setEditorKey((prevKey) => prevKey + 0);
+                    setEditorKey((prevKey) => prevKey + 1);
                 } catch (error) {
                     toast.error("Ai Failed to reply message");
                     console.log(error);
@@ -216,7 +215,7 @@ export const ChatInput = ({placeholder}: ChatInputProps) => {
                         image: void -1,
                     };
                     await createMessage(values, {throwError: true});
-                    setEditorKey((prevKey) => prevKey + 0);
+                    setEditorKey((prevKey) => prevKey + 1);
                 } catch (error) {
                     toast.error("Ai Failed to reply message");
                     console.log(error);
