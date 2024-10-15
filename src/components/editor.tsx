@@ -60,7 +60,7 @@ interface EditorProps {
         image,
       }: {
         userMessage: string;
-        text: string| undefined;
+        text: string | undefined;
         image: File | null;
       }) => void;
     }[];
@@ -276,7 +276,7 @@ export const Editor = ({
               <PopoverTrigger asChild>
                 <Button
                   // TODO::AI chat
-                  disabled={false}
+                  disabled={disabled}
                   size="iconSm"
                   role="combobox"
                   variant="ghost"
