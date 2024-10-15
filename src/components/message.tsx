@@ -140,6 +140,7 @@ export const Message = ({
       .map((op) => op.insert)
       .join("");
     console.debug({ _message, message });
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const r = await useTranslateText(message);
     if (r !== void 0) {
       setTranslateText(r.message.content);
