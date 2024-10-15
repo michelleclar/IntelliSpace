@@ -17,6 +17,7 @@ import { ThreadBar } from "@/components/thread-bar";
 import { useState } from "react";
 import { Op } from "quill/core";
 import { useTranslateText } from "@/features/ai/api/use-translate-text";
+import {useGetSystemconfig} from "@/features/ai/api/use-get-systemconfig";
 
 interface MessageProps {
   id: Id<"messages">;
@@ -79,6 +80,7 @@ export const Message = ({
     useToggleReaction();
 
   const { parentMessageId, onOpenMessage, onOpenProfile, onClose } = usePanel();
+  const {data: systemconfig, isLoading: isLoadingSystemconfig} = useGetSystemconfig();
 
   const handleReaction = (value: string) => {
     toggleReaction(
@@ -134,6 +136,7 @@ export const Message = ({
     if (translateText) {
       return;
     }
+    if (isLoadingSystemconfig || !systemconfig) return;
     const _message: { ops: Op[] } = JSON.parse(body);
     const message = _message.ops
       .filter((op) => typeof op.insert === "string")
@@ -141,7 +144,7 @@ export const Message = ({
       .join("");
     console.debug({ _message, message });
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const r = await useTranslateText(message);
+    const r = await useTranslateText({content: message, token: systemconfig.aiApiToken});
     if (r !== void 0) {
       setTranslateText(r.message.content);
     }
