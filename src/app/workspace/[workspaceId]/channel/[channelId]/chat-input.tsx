@@ -9,6 +9,8 @@ import { useGenerateUploadUrl } from "@/features/upload/api/use-generate-upload-
 import { useChannelId } from "@/hooks/use-channel-id";
 import { useWorkspaceId } from "@/hooks/use-workspace-id";
 import { Id } from "../../../../../../convex/_generated/dataModel";
+import { Languages, MessageCircleQuestion } from "lucide-react";
+import { useTranslateText } from "@/features/ai/api/use-translate-text";
 
 const Editor = dynamic(() => import("@/components/editor"), { ssr: false });
 
@@ -21,6 +23,29 @@ type CreateMessageValues = {
   workspaceId: Id<"workspaces">;
   body: string;
   image: Id<"_storage"> | undefined;
+  parentMessageId?: Id<"messages">;
+};
+
+type AiReplyProps = {
+  userMessage: string;
+  text: string;
+  image: File | null;
+};
+
+const handelTranslateText = async (message: string) => {
+  const choice = await useTranslateText(message);
+  const aiReply = choice?.message.content;
+  const body = {
+    ops: [
+      {
+        attributes: {
+          bold: true,
+        },
+        insert: `${aiReply}`,
+      },
+    ],
+  };
+  return body;
 };
 
 export const ChatInput = ({ placeholder }: ChatInputProps) => {
@@ -31,6 +56,11 @@ export const ChatInput = ({ placeholder }: ChatInputProps) => {
   const { mutate: generateUploadUrl } = useGenerateUploadUrl();
   const channelId = useChannelId();
   const workspaceId = useWorkspaceId();
+  // const handelAiReply = async ({ body }: { body: string }) => {
+  //
+  //   await createMessage(values, { throwError: true });
+  //   setEditorKey((prevKey) => prevKey + 1);
+  // };
 
   const handelSubmit = async ({
     body,
@@ -70,7 +100,9 @@ export const ChatInput = ({ placeholder }: ChatInputProps) => {
         const { storageId } = await result.json();
         values.image = storageId;
       }
-      await createMessage(values, { throwError: true });
+      await createMessage(values, {
+        throwError: true,
+      });
       setEditorKey((prevKey) => prevKey + 1);
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
@@ -81,6 +113,113 @@ export const ChatInput = ({ placeholder }: ChatInputProps) => {
     }
   };
 
+  const AI = [
+    {
+      value: "transition",
+      label: "Transition",
+      icon: Languages,
+      handleReply: async ({ userMessage, text, image }: AiReplyProps) => {
+        setIsPending(true);
+        editorRef.current?.enable(false);
+        try {
+          const values: CreateMessageValues = {
+            channelId,
+            workspaceId,
+            body: userMessage,
+            image: void 0,
+          };
+
+          if (image) {
+            const url = await generateUploadUrl({}, { throwError: true });
+
+            if (!url) {
+              throw new Error("Url not found");
+            }
+
+            const result = await fetch(url, {
+              method: "POST",
+              headers: { "Content-Type": image.type },
+              body: image,
+            });
+
+            if (!result.ok) {
+              throw new Error("Failed to uoload image");
+            }
+
+            const { storageId } = await result.json();
+            values.image = storageId;
+          }
+
+          await createMessage(values, {
+            onSuccess: async (id) => {
+              if (!id) {
+                return;
+              }
+              const messageId = id;
+              const aiReply = await handelTranslateText(text);
+              const aiReplyValues: CreateMessageValues = {
+                channelId,
+                workspaceId,
+                parentMessageId: messageId,
+                body: JSON.stringify(aiReply),
+                image: void 0,
+              };
+              await createMessage(aiReplyValues, { throwError: true });
+            },
+            throwError: true,
+          });
+          setEditorKey((prevKey) => prevKey + 0);
+        } catch (error) {
+          toast.error("Ai Failed to reply message");
+        } finally {
+          setIsPending(false);
+          editorRef.current?.enable(true);
+        }
+      },
+    },
+    {
+      value: "question",
+      label: "Question",
+      icon: MessageCircleQuestion,
+      handleReply: async ({ text, userMessage, image }: AiReplyProps) => {
+        setIsPending(true);
+        editorRef.current?.enable(false);
+        try {
+          const choice = await useTranslateText(userMessage);
+
+          const aiReply = choice?.message.content;
+          const body = {
+            ops: [
+              {
+                attributes: {
+                  bold: true,
+                },
+                insert: `${aiReply}`,
+              },
+              {
+                insert: "\\n",
+              },
+            ],
+          };
+          const values: CreateMessageValues = {
+            channelId,
+            workspaceId,
+            // parentMessageId: parentMessage,
+            body: JSON.stringify(body),
+            image: void -1,
+          };
+          await createMessage(values, { throwError: true });
+          setEditorKey((prevKey) => prevKey + 0);
+        } catch (error) {
+          toast.error("Ai Failed to reply message");
+        } finally {
+          setIsPending(false);
+          editorRef.current?.enable(true);
+        }
+      },
+    },
+  ];
+
   return (
     <div className="px-5 w-full">
       <Editor
@@ -89,6 +228,7 @@ export const ChatInput = ({ placeholder }: ChatInputProps) => {
         onSubmit={handelSubmit}
         disabled={isPending}
         innerRef={editorRef}
+        aiReplyModel={{ AIModel: AI }}
       />
     </div>
   );

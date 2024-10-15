@@ -14,6 +14,9 @@ import { useToggleReaction } from "@/features/reactions/api/use-toggle-reaction"
 import { Reactions } from "@/components/reactions";
 import { usePanel } from "@/hooks/use-panel";
 import { ThreadBar } from "@/components/thread-bar";
+import { useState } from "react";
+import { Op } from "quill/core";
+import { useTranslateText } from "@/features/ai/api/use-translate-text";
 
 interface MessageProps {
   id: Id<"messages">;
@@ -125,6 +128,23 @@ export const Message = ({
       },
     );
   };
+
+  const [translateText, setTranslateText] = useState<string>("");
+  const handleTranslate = async () => {
+    if (translateText) {
+      return;
+    }
+    const _message: { ops: Op[] } = JSON.parse(body);
+    const message = _message.ops
+      .filter((op) => typeof op.insert === "string")
+      .map((op) => op.insert)
+      .join("");
+    console.debug({ _message, message });
+    const r = await useTranslateText(message);
+    if (r !== void 0) {
+      setTranslateText(r.message.content);
+    }
+  };
   if (isCompact) {
     return (
       <>
@@ -185,6 +205,8 @@ export const Message = ({
               handleDelete={handleRemove}
               handleReaction={handleReaction}
               hideThreadButton={hideThreadButton}
+              translateText={translateText}
+              handleTranslate={handleTranslate}
             />
           )}
         </div>
@@ -263,6 +285,8 @@ export const Message = ({
             handleDelete={handleRemove}
             handleReaction={handleReaction}
             hideThreadButton={hideThreadButton}
+            translateText={translateText}
+            handleTranslate={handleTranslate}
           />
         )}
       </div>

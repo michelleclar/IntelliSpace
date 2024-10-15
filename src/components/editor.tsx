@@ -1,5 +1,22 @@
+import { Languages, LucideIcon, MessageCircleQuestion } from "lucide-react";
+import { IconType } from "react-icons/lib";
+
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandShortcut,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { ImageIcon, Smile, XIcon } from "lucide-react";
+import { BotMessageSquare, ImageIcon, Smile, XIcon } from "lucide-react";
 import Quill, { type QuillOptions } from "quill";
 import "quill/dist/quill.snow.css";
 import {
@@ -32,6 +49,22 @@ interface EditorProps {
   disabled?: boolean;
   innerRef?: MutableRefObject<Quill | null>;
   onSubmit: ({ image, body }: EditorValue) => void;
+  aiReplyModel?: {
+    AIModel: {
+      value: string;
+      label: string;
+      icon: LucideIcon | IconType;
+      handleReply: ({
+        userMessage,
+        text,
+        image,
+      }: {
+        userMessage: string;
+        text: string;
+        image: File | null;
+      }) => {};
+    }[];
+  };
 }
 export const Editor = ({
   variant = "create",
@@ -41,9 +74,14 @@ export const Editor = ({
   defaultValue = [],
   disabled = false,
   innerRef,
+  aiReplyModel: aiModel,
 }: EditorProps) => {
   const [text, setText] = useState("");
   const [image, setImage] = useState<File | null>(null);
+
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState("");
+
   const [isToolbarVisible, setIstoolbarVisible] = useState(true);
 
   //use ref solving  useEffect reload
@@ -121,6 +159,15 @@ export const Editor = ({
     quill.on(Quill.events.TEXT_CHANGE, () => {
       setText(quill.getText());
     });
+    // quill.keyboard.addBinding(
+    //   {
+    //     key: "/",
+    //   },
+    //   function () {
+    //     console.log("command");
+    //     setOpen(!open);
+    //   },
+    // );
 
     return () => {
       quill.off(Quill.events.TEXT_CHANGE);
@@ -149,6 +196,7 @@ export const Editor = ({
     const quill = quillRef.current;
     quill?.insertText(quill?.getSelection()?.index || 0, emoji);
   };
+
   const isEmpty = !image && text.replace(/<(.|\n)*?/g, "").trim().length === 0;
   return (
     <div className="flex flex-col">
@@ -189,10 +237,7 @@ export const Editor = ({
             </div>
           </div>
         )}
-        <div
-          // maybe add ai icon
-          className="flex px-2 pb-2 z-[5]"
-        >
+        <div className="flex px-2 pb-2 z-[5]">
           <Hint
             label={isToolbarVisible ? "Hide formatting" : "Show formatting"}
           >
@@ -224,6 +269,62 @@ export const Editor = ({
                 <ImageIcon className="size-4" />
               </Button>
             </Hint>
+          )}
+
+          {variant === "create" && aiModel && (
+            <Popover open={open} onOpenChange={setOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  // TODO::AI chat
+                  disabled={false}
+                  size="iconSm"
+                  role="combobox"
+                  variant="ghost"
+                  aria-expanded={open}
+                  onClick={() => {
+                    setOpen(true);
+                  }}
+                >
+                  <BotMessageSquare className="size-4" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-[200px] p-0">
+                <Command>
+                  <CommandInput
+                    placeholder="Search framework..."
+                    className="h-9"
+                  />
+                  <CommandList>
+                    <CommandEmpty>No framework found.</CommandEmpty>
+                    <CommandGroup>
+                      {aiModel.AIModel.map((framework) => (
+                        <AIItem
+                          key={framework.value}
+                          value={framework.value}
+                          onSelect={(currentValue) => {
+                            setValue(
+                              currentValue === value ? "" : currentValue,
+                            );
+                            setOpen(false);
+                            framework.handleReply({
+                              userMessage: JSON.stringify(
+                                quillRef.current?.getContents(),
+                              ),
+                              text: quillRef.current?.getText()!,
+                              image,
+                            });
+
+                            console.log(currentValue);
+                          }}
+                          label={framework.label}
+                          icon={framework.icon}
+                        />
+                      ))}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
           )}
 
           {variant === "update" && (
@@ -288,6 +389,41 @@ export const Editor = ({
         </div>
       )}
     </div>
+  );
+};
+const AI = [
+  {
+    value: "transition",
+    label: "Transition",
+    icon: Languages,
+  },
+  {
+    value: "question",
+    label: "Question",
+    icon: MessageCircleQuestion,
+  },
+];
+const AIItem = ({
+  label,
+  icon: Icon,
+  commandShortcut,
+  onSelect,
+  value,
+  key,
+}: {
+  label: string;
+  icon: LucideIcon | IconType;
+  commandShortcut?: string;
+  onSelect: (current: string) => void;
+  value: string;
+  key: string;
+}) => {
+  return (
+    <CommandItem onSelect={onSelect} key={key} value={value}>
+      <Icon className="mr-2 h-4 w-4" />
+      <span>{label}</span>
+      <CommandShortcut>{commandShortcut}</CommandShortcut>
+    </CommandItem>
   );
 };
 

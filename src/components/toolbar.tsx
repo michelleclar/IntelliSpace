@@ -2,7 +2,13 @@ import { EmojiPopover } from "@/components/emoji-popover";
 import { Hint } from "@/components/hint";
 import { Button } from "@/components/ui/button";
 import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
   Languages,
+  Loader,
   MessageSquareTextIcon,
   Pencil,
   Smile,
@@ -16,6 +22,8 @@ interface ToolbarProos {
   handleThread: () => void;
   handleDelete: () => void;
   handleReaction: (value: string) => void;
+  handleTranslate: () => void;
+  translateText: string;
   hideThreadButton?: boolean;
 }
 
@@ -25,7 +33,9 @@ export const Toolbar = ({
   handleEdit,
   handleThread,
   handleDelete,
+  translateText,
   handleReaction,
+  handleTranslate,
   hideThreadButton,
 }: ToolbarProos) => {
   return (
@@ -66,12 +76,25 @@ export const Toolbar = ({
           </Hint>
         )}
         <Hint label="Translate message">
-          <Button variant="ghost" size="iconSm" disabled={isPending}>
-            <Languages
-              //TODO :add Ai translate
-              className="size-4"
-            />
-          </Button>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant="ghost"
+                size="iconSm"
+                disabled={isPending}
+                onClick={handleTranslate}
+                // onClick={() => {}}
+              >
+                <Languages
+                  // TODO :add Ai translate
+                  className="size-4"
+                />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-80">
+              <TranslatePopover translateText={translateText} />
+            </PopoverContent>
+          </Popover>
         </Hint>
 
         {isAuthor && (
@@ -86,6 +109,26 @@ export const Toolbar = ({
             </Button>
           </Hint>
         )}
+      </div>
+    </div>
+  );
+};
+
+const TranslatePopover = ({ translateText }: { translateText: string }) => {
+  if (!translateText) {
+    return (
+      <div className="flex flex-col justify-center items-center">
+        <div className="space-y-2">
+          <Loader className="size-6 animate-spin text-muted-foreground " />
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid gap-4">
+      <div className="space-y-2">
+        <p className="text-sm text-muted-foreground">{translateText}</p>
       </div>
     </div>
   );
