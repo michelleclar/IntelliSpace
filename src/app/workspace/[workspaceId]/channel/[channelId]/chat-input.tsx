@@ -46,6 +46,7 @@ export const ChatInput = ({ placeholder }: ChatInputProps) => {
   //   setEditorKey((prevKey) => prevKey + 1);
   // };
   const handelTranslateText = async (message: string) => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const choice = await useTranslateText(message);
     const aiReply = choice?.message.content;
     const body = {
@@ -169,7 +170,7 @@ export const ChatInput = ({ placeholder }: ChatInputProps) => {
           setEditorKey((prevKey) => prevKey + 0);
         } catch (error) {
           toast.error("Ai Failed to reply message");
-          console.log(error)
+          console.log(error);
         } finally {
           setIsPending(false);
           editorRef.current?.enable(true);
@@ -180,7 +181,7 @@ export const ChatInput = ({ placeholder }: ChatInputProps) => {
       value: "question",
       label: "Question",
       icon: MessageCircleQuestion,
-      handleReply: async ({ text, userMessage, image }: AiReplyProps) => {
+      handleReply: async ({ userMessage }: AiReplyProps) => {
         setIsPending(true);
         editorRef.current?.enable(false);
         try {

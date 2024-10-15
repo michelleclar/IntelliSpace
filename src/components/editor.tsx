@@ -1,4 +1,4 @@
-import { Languages, LucideIcon, MessageCircleQuestion } from "lucide-react";
+import { LucideIcon } from "lucide-react";
 import { IconType } from "react-icons/lib";
 
 import {
