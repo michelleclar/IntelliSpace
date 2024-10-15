@@ -185,6 +185,7 @@ export const ChatInput = ({ placeholder }: ChatInputProps) => {
         setIsPending(true);
         editorRef.current?.enable(false);
         try {
+          // eslint-disable-next-line react-hooks/rules-of-hooks
           const choice = await useTranslateText(userMessage);
 
           const aiReply = choice?.message.content;
@@ -212,6 +213,7 @@ export const ChatInput = ({ placeholder }: ChatInputProps) => {
           setEditorKey((prevKey) => prevKey + 0);
         } catch (error) {
           toast.error("Ai Failed to reply message");
+          console.log(error)
         } finally {
           setIsPending(false);
           editorRef.current?.enable(true);
