@@ -102,9 +102,9 @@ export const Thread = ({ messageId, onClose }: ThreadProps) => {
       }
       await createMessage(values, { throwError: true });
       setEditorKey((prevKey) => prevKey + 1);
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       toast.error("Failed to send message");
+      console.error(error)
     } finally {
       setIsPending(false);
       editorRef.current?.enable(true);
