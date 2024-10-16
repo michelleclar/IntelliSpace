@@ -15,7 +15,7 @@ import {
   Trash,
 } from "lucide-react";
 
-interface ToolbarProos {
+interface ToolbarProps {
   isAuthor: boolean;
   isPending: boolean;
   handleEdit: () => void;
@@ -37,7 +37,7 @@ export const Toolbar = ({
   handleReaction,
   handleTranslate,
   hideThreadButton,
-}: ToolbarProos) => {
+}: ToolbarProps) => {
   return (
     <div className="absolute top-0 right-5">
       <div className="group-hover:opacity-100 opacity-0 transition-opacity border bg-white rounded-md shadow-sm">
@@ -75,27 +75,27 @@ export const Toolbar = ({
             </Button>
           </Hint>
         )}
-        <Hint label="Translate message">
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant="ghost"
-                size="iconSm"
-                disabled={isPending}
-                onClick={handleTranslate}
-                // onClick={() => {}}
-              >
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant="ghost"
+              size="iconSm"
+              disabled={isPending}
+              onClick={handleTranslate}
+              // onClick={() => {}}
+            >
+              <Hint label="Translate message">
                 <Languages
                   // TODO :add Ai translate
                   className="size-4"
                 />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-80">
-              <TranslatePopover translateText={translateText} />
-            </PopoverContent>
-          </Popover>
-        </Hint>
+              </Hint>
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-80">
+            <TranslatePopover translateText={translateText} />
+          </PopoverContent>
+        </Popover>
 
         {isAuthor && (
           <Hint label="Delete message">
