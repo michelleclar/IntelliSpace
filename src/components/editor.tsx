@@ -407,9 +407,14 @@ const AIItem = ({
   key: string;
 }) => {
   return (
-    <CommandItem onSelect={onSelect} key={key} value={value}>
-      <Icon className="mr-2 h-4 w-4" />
-      <span>{label}</span>
+    <CommandItem
+      onSelect={onSelect}
+      key={key}
+      value={value}
+      className="gap-x-2"
+    >
+      <Icon className="size-4" />
+      <span className="font-bold text-xs">{label}</span>
       <CommandShortcut>{commandShortcut}</CommandShortcut>
     </CommandItem>
   );

@@ -9,9 +9,27 @@ import { useGenerateUploadUrl } from "@/features/upload/api/use-generate-upload-
 import { useChannelId } from "@/hooks/use-channel-id";
 import { useWorkspaceId } from "@/hooks/use-workspace-id";
 import { Id } from "../../../../../../convex/_generated/dataModel";
-import { Languages, Loader, MessageCircleQuestion } from "lucide-react";
-import { useTranslateText } from "@/features/ai/api/use-translate-text";
+import {
+  Brain,
+  Code,
+  Languages,
+  Loader,
+  MessageCircleQuestion,
+} from "lucide-react";
+import {
+  aiTranslateText,
+  aiTranslateTextReplyFormat,
+} from "@/features/ai/api/ai-translate-text";
 import { useGetSystemconfig } from "@/features/ai/api/use-get-systemconfig";
+import {
+  aiOptimizationUserPrompt,
+  aiOptimizationUserPromptReplyFormat,
+} from "@/features/ai/api/ai-optimization-user-prompt";
+import { AiRequestProps, Choice } from "@/features/ai/api/ai-type";
+import {
+  aiExplainCode,
+  aiExplainCodeReplyFormat,
+} from "@/features/ai/api/ai-explain-code";
 
 const Editor = dynamic(() => import("@/components/editor"), { ssr: false });
 
@@ -43,18 +61,20 @@ export const ChatInput = ({ placeholder }: ChatInputProps) => {
   const workspaceId = useWorkspaceId();
   const { data: systemconfig, isLoading: isLoadingSystemconfig } =
     useGetSystemconfig();
-  // const handelAiReply = async ({ body }: { body: string }) => {
-  //
-  //   await createMessage(values, { throwError: true });
-  //   setEditorKey((prevKey) => prevKey + 1);
-  // };
-  const handelSubmit = async ({
-    body,
-    image,
-  }: {
-    body: string;
-    image: File | null;
-  }) => {
+
+  // :NOTE: await ai token
+  if (isLoadingSystemconfig || !systemconfig) {
+    return (
+      <div className="h-full flex-1 flex items-center justify-center">
+        <Loader className="size-5 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
+  const handleCreateMessage = async (
+    { channelId, workspaceId, body, parentMessageId }: CreateMessageValues,
+    { _image }: { _image?: File | null },
+  ) => {
     try {
       setIsPending(true);
       editorRef.current?.enable(false);
@@ -63,10 +83,11 @@ export const ChatInput = ({ placeholder }: ChatInputProps) => {
         channelId,
         workspaceId,
         body,
+        parentMessageId: parentMessageId,
         image: void 0,
       };
 
-      if (image) {
+      if (_image) {
         const url = await generateUploadUrl({}, { throwError: true });
 
         if (!url) {
@@ -75,8 +96,8 @@ export const ChatInput = ({ placeholder }: ChatInputProps) => {
 
         const result = await fetch(url, {
           method: "POST",
-          headers: { "Content-Type": image.type },
-          body: image,
+          headers: { "Content-Type": _image.type },
+          body: _image,
         });
 
         if (!result.ok) {
@@ -86,10 +107,11 @@ export const ChatInput = ({ placeholder }: ChatInputProps) => {
         const { storageId } = await result.json();
         values.image = storageId;
       }
-      await createMessage(values, {
+      const id = await createMessage(values, {
         throwError: true,
       });
       setEditorKey((prevKey) => prevKey + 1);
+      return id;
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       toast.error("Failed to send message");
@@ -99,32 +121,81 @@ export const ChatInput = ({ placeholder }: ChatInputProps) => {
     }
   };
 
-  if (isLoadingSystemconfig || !systemconfig) {
-    return (
-      <div className="h-full flex-1 flex items-center justify-center">
-        <Loader className="size-5 animate-spin text-muted-foreground" />
-      </div>
+  const aiReplyMessage = async ({
+    aiReplyProps: { userMessage, text, image },
+    aiExecuteMethod,
+    aiReplyFormatMethod,
+  }: {
+    aiReplyProps: AiReplyProps;
+    aiExecuteMethod: (args: AiRequestProps) => Promise<Choice | undefined>;
+    aiReplyFormatMethod: (args: string) => string;
+  }) => {
+    const parentMessageId = await handleCreateMessage(
+      { channelId, workspaceId, body: userMessage, image: void 0 },
+      { _image: image },
     );
-  }
-  const handelTranslateText = async (message: string | undefined) => {
-    if (isLoadingSystemconfig || !systemconfig) return;
-    if (!message) throw new Error("Ai reply message is null");
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const choice = await useTranslateText({
-      content: message,
+
+    if (!text) throw new Error("Ai reply message is null");
+    await aiExecuteMethod({ content: text, token: systemconfig.aiApiToken });
+    const choice = await aiExecuteMethod({
+      content: text,
       token: systemconfig.aiApiToken,
     });
+
     const aiReply = choice?.message.content;
-    return {
-      ops: [
-        {
-          attributes: {
-            bold: true,
-          },
-          insert: `${aiReply}`,
-        },
-      ],
-    };
+
+    if (!aiReply) throw new Error("Ai reply message is null");
+    const aiReplyFormatToQuill = aiReplyFormatMethod(aiReply);
+
+    handleCreateMessage(
+      {
+        channelId,
+        workspaceId,
+        parentMessageId,
+        body: aiReplyFormatToQuill,
+        image: void 0,
+      },
+      { _image: null },
+    );
+  };
+
+  // NOTE: translate form ai ,and ai reply formated 'Quill'
+  const handleTranslateText = async ({
+    userMessage,
+    text,
+    image,
+  }: AiReplyProps) => {
+    aiReplyMessage({
+      aiReplyProps: { userMessage, text, image },
+      aiExecuteMethod: aiTranslateText,
+      aiReplyFormatMethod: aiTranslateTextReplyFormat,
+    });
+  };
+
+  // NOTE: optimization form ai ,and ai reply formated 'Quill'
+  const handleOptimizationUserPrompt = async ({
+    userMessage,
+    text,
+    image,
+  }: AiReplyProps) => {
+    aiReplyMessage({
+      aiReplyProps: { userMessage, text, image },
+      aiExecuteMethod: aiOptimizationUserPrompt,
+      aiReplyFormatMethod: aiOptimizationUserPromptReplyFormat,
+    });
+  };
+
+  // NOTE: explain form ai ,and ai reply formated 'Quill'
+  const handleExplainCode = async ({
+    userMessage,
+    text,
+    image,
+  }: AiReplyProps) => {
+    aiReplyMessage({
+      aiReplyProps: { userMessage, text, image },
+      aiExecuteMethod: aiExplainCode,
+      aiReplyFormatMethod: aiExplainCodeReplyFormat,
+    });
   };
 
   const AI = [
@@ -132,115 +203,40 @@ export const ChatInput = ({ placeholder }: ChatInputProps) => {
       value: "transition",
       label: "Transition",
       icon: Languages,
-      handleReply: async ({ userMessage, text, image }: AiReplyProps) => {
-        setIsPending(true);
-
-        editorRef.current?.enable(false);
-        try {
-          const values: CreateMessageValues = {
-            channelId,
-            workspaceId,
-            body: userMessage,
-            image: void 0,
-          };
-
-          if (image) {
-            const url = await generateUploadUrl({}, { throwError: true });
-
-            if (!url) {
-              throw new Error("Url not found");
-            }
-
-            const result = await fetch(url, {
-              method: "POST",
-              headers: { "Content-Type": image.type },
-              body: image,
-            });
-
-            if (!result.ok) {
-              throw new Error("Failed to uoload image");
-            }
-
-            const { storageId } = await result.json();
-            values.image = storageId;
-          }
-
-          await createMessage(values, {
-            onSuccess: async (id) => {
-              if (!id) {
-                return;
-              }
-              const messageId = id;
-              const aiReply = await handelTranslateText(text);
-              const aiReplyValues: CreateMessageValues = {
-                channelId,
-                workspaceId,
-                parentMessageId: messageId,
-                body: JSON.stringify(aiReply),
-                image: void 0,
-              };
-              await createMessage(aiReplyValues, { throwError: true });
-            },
-            throwError: true,
-          });
-          setEditorKey((prevKey) => prevKey + 1);
-        } catch (error) {
-          toast.error("Ai Failed to reply message");
-          console.log(error);
-        } finally {
-          setIsPending(false);
-          editorRef.current?.enable(true);
-        }
-      },
+      handleReply: handleTranslateText,
+    },
+    {
+      value: "explain code",
+      label: "CODEWALK",
+      icon: Code,
+      handleReply: handleExplainCode,
+    },
+    {
+      value: "optimization prompt",
+      label: "OPT",
+      icon: Brain,
+      handleReply: handleOptimizationUserPrompt,
     },
     {
       value: "question",
-      label: "Question",
+      label: "Q",
       icon: MessageCircleQuestion,
-      handleReply: async ({ userMessage }: AiReplyProps) => {
-        if (isLoadingSystemconfig || !systemconfig) return;
-        setIsPending(true);
-        editorRef.current?.enable(false);
-        try {
-          // eslint-disable-next-line react-hooks/rules-of-hooks
-          const choice = await useTranslateText({
-            content: userMessage,
-            token: systemconfig.aiApiToken,
-          });
-
-          const aiReply = choice?.message.content;
-          const body = {
-            ops: [
-              {
-                attributes: {
-                  bold: true,
-                },
-                insert: `${aiReply}`,
-              },
-              {
-                insert: "\\n",
-              },
-            ],
-          };
-          const values: CreateMessageValues = {
-            channelId,
-            workspaceId,
-            // parentMessageId: parentMessage,
-            body: JSON.stringify(body),
-            image: void -1,
-          };
-          await createMessage(values, { throwError: true });
-          setEditorKey((prevKey) => prevKey + 1);
-        } catch (error) {
-          toast.error("Ai Failed to reply message");
-          console.log(error);
-        } finally {
-          setIsPending(false);
-          editorRef.current?.enable(true);
-        }
-      },
+      handleReply: handleOptimizationUserPrompt,
     },
   ];
+
+  const handelSubmit = async ({
+    body,
+    image,
+  }: {
+    body: string;
+    image: File | null;
+  }) => {
+    handleCreateMessage(
+      { channelId, workspaceId, body, image: void 0 },
+      { _image: image },
+    );
+  };
 
   return (
     <div className="px-5 w-full">
