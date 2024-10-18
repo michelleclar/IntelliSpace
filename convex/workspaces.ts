@@ -73,7 +73,11 @@ export const create = mutation({
       joinCode,
     });
     await ctx.db.insert("members", { userId, workspaceId, role: "admin" });
-    await ctx.db.insert("channels", { name: "general", workspaceId });
+    await ctx.db.insert("channels", {
+      name: "general",
+      workspaceId,
+      type: "channel",
+    });
     // const workspace = await ctx.db.get(workspaceId);
     return workspaceId;
   },

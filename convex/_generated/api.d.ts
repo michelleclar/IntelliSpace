@@ -18,6 +18,7 @@ import type {
 import type * as auth from "../auth.js";
 import type * as canvases from "../canvases.js";
 import type * as channels from "../channels.js";
+import type * as chatbot from "../chatbot.js";
 import type * as conversations from "../conversations.js";
 import type * as http from "../http.js";
 import type * as members from "../members.js";
@@ -40,6 +41,7 @@ declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   canvases: typeof canvases;
   channels: typeof channels;
+  chatbot: typeof chatbot;
   conversations: typeof conversations;
   http: typeof http;
   members: typeof members;

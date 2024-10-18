@@ -21,17 +21,24 @@ import { useMemberId } from "@/hooks/use-member-id";
 import { useGetCanvases } from "@/features/canvas/api/use-get-canvases";
 import { useCreateCanvasModal } from "@/features/canvas/store/use-create-canvas-model";
 import { useCanvasId } from "@/hooks/use-canvas-id";
+import { useGetChatbots } from "@/features/chatbot/api/use-get-chatbots";
+import { useChatbotId } from "@/hooks/use-chatbot-id";
+import { useCreateChatbotModal } from "@/features/chatbot/store/use-create-chatbot-model";
 
 export const WorkspaceSidebar = () => {
   const channelId = useChannelId();
   const workspaceId = useWorkspaceId();
   const memberId = useMemberId();
   const canvasId = useCanvasId();
+  const chatbotId = useChatbotId();
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_open, setChannelOpen] = useCreateChannelModal();
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, setCanvasOpen] = useCreateCanvasModal();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [__, setChatbotOpen] = useCreateChatbotModal();
+
   const { member, isLoading: memberIsLoading } = useCurrentMember({
     workspaceId,
   });
@@ -43,11 +50,15 @@ export const WorkspaceSidebar = () => {
     id: workspaceId,
   });
 
+  const { chatbots, isLoading: chatbotsIsLoading } = useGetChatbots({
+    id: workspaceId,
+  });
+
   const { members, isLoading: membersIsLoading } = useGetMembers({
     workspaceId,
   });
 
-  const { canvases} = useGetCanvases({
+  const { canvases } = useGetCanvases({
     id: workspaceId,
   });
 
@@ -55,7 +66,8 @@ export const WorkspaceSidebar = () => {
     workspaceIsLoading ||
     memberIsLoading ||
     channlesIsLoading ||
-    membersIsLoading
+    membersIsLoading ||
+    chatbotsIsLoading
   ) {
     return (
       <div className="flex flex-col bg-[#5E2C5F] h-full items-center justify-center">
@@ -81,7 +93,7 @@ export const WorkspaceSidebar = () => {
       />
       <div
         //TODO: Not yet implemented Threads and Drafts & sent
-        className="flex-col px-2 mt-3 flex"
+        className="flex-col px-2 mt-3 hidden"
       >
         <SidebarItem
           label="Threads"
@@ -116,6 +128,7 @@ export const WorkspaceSidebar = () => {
         ))}
       </WorkspaceSection>
       <WorkspaceSection
+        // TODO: canvas ,need ai to image to image or text to image
         label="Canvases"
         hint="New Canvas"
         onNew={
@@ -136,7 +149,28 @@ export const WorkspaceSidebar = () => {
           />
         ))}
       </WorkspaceSection>
-
+      <WorkspaceSection
+        label="Chat bot"
+        hint="New Chat bot"
+        onNew={
+          member.role === "admin"
+            ? () => {
+                setChatbotOpen(true);
+                console.log("chat");
+              }
+            : void 0
+        }
+      >
+        {chatbots?.map((item) => (
+          <SidebarItem
+            key={item._id}
+            icon={HashIcon}
+            label={item.name}
+            variant={chatbotId === item._id ? "active" : "default"}
+            redirect={`/workspace/${workspaceId}/chatbot/${item._id}`}
+          />
+        ))}
+      </WorkspaceSection>
       <WorkspaceSection
         label="Direcrt Messsages"
         hint="New Direcrt Message"

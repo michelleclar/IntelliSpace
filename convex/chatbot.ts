@@ -83,7 +83,7 @@ export const get = query({
       .withIndex("by_workspace_id", (q) =>
         q.eq("workspaceId", args.workspaceId),
       )
-      .filter((q) => q.eq(q.field("type"), "channel"))
+      .filter((q) => q.eq(q.field("type"), "chat"))
       .collect();
   },
 });
@@ -128,7 +128,7 @@ export const create = mutation({
     return await ctx.db.insert("channels", {
       name: parsedName,
       workspaceId: args.workspaceId,
-      type: "channel",
+      type: "chat",
     });
   },
 });
