@@ -127,7 +127,7 @@ export const ChatInput = ({ placeholder }: ChatInputProps) => {
     aiReplyFormatMethod,
   }: {
     aiReplyProps: AiReplyProps;
-    aiExecuteMethod: (args: AiRequestProps) => Promise<Choice | undefined>;
+    aiExecuteMethod: ({content,token}: AiRequestProps) => Promise<Choice | undefined>;
     aiReplyFormatMethod: (args: string) => string;
   }) => {
     const parentMessageId = await handleCreateMessage(
