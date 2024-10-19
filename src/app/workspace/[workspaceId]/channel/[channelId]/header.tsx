@@ -1,5 +1,6 @@
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogFooter,
   DialogHeader,
@@ -11,7 +12,6 @@ import { FaChevronDown } from "react-icons/fa";
 import { TrashIcon } from "lucide-react";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { DialogClose } from "@radix-ui/react-dialog";
 import { useChannelId } from "@/hooks/use-channel-id";
 import { useUpdateChannel } from "@/features/channels/api/use-update-channel";
 import { toast } from "sonner";
