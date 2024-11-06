@@ -17,7 +17,7 @@ import { ThreadBar } from "@/components/thread-bar";
 import { useState } from "react";
 import { Op } from "quill/core";
 import {
-  useAiTransportText,
+  useAiTranslateText,
 } from "@/features/ai/api/ai-translate-text";
 import { useGetSystemconfig } from "@/features/ai/api/use-get-systemconfig";
 
@@ -80,7 +80,7 @@ export const Message = ({
     useRemoveMessage();
   const { mutate: toggleReaction, isPending: isTogglingReaction } =
     useToggleReaction();
-  const { mutate: aiTranslateText } = useAiTransportText();
+  const { mutate: aiTranslateText } = useAiTranslateText();
 
   const { parentMessageId, onOpenMessage, onOpenProfile, onClose } = usePanel();
   const { data: systemconfig, isLoading: isLoadingSystemconfig } =
