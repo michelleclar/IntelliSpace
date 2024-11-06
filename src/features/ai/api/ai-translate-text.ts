@@ -1,13 +1,14 @@
 import { aiReplyFormatToDelta } from "@/features/ai/api/utils";
-import { AiReply, AiRequestProps } from "./ai-type";
+import { AiOptions, AiReply, AiRequestProps, AiResponseType } from "./ai-type";
+import { useCallback, useMemo, useState } from "react";
 
-export const aiTranslateTextReplyFormat = (aiReply: string) => {
+const aiTranslateTextReplyFormat = (aiReply: string) => {
   return JSON.stringify(
     aiReplyFormatToDelta({ aiReply, modelName: "Translate" }),
   );
 };
 
-export const aiTranslateText = async ({ content, token }: AiRequestProps) => {
+const aiTranslateText = async ({ content, token }: AiRequestProps) => {
   if (content.replace(/<(.|\n)*?/g, "").trim().length === 0) {
     return void 0;
   }
@@ -51,4 +52,51 @@ export const aiTranslateText = async ({ content, token }: AiRequestProps) => {
   }
 
   return void 0;
+};
+export const useAiTranslateText= () => {
+  const [data, setData] = useState<AiResponseType>(null);
+  const [error, setError] = useState<Error | null>(null);
+
+  const [status, setStatus] = useState<
+    "success" | "error" | "settled" | "pending" | null
+  >(null);
+
+  const isPending = useMemo(() => status === "pending", [status]);
+  const isSuccess = useMemo(() => status === "success", [status]);
+  const isError = useMemo(() => status === "error", [status]);
+  const isSettled = useMemo(() => status === "settled", [status]);
+
+  const mutate = useCallback(
+    async (values: AiRequestProps, options?: AiOptions) => {
+      try {
+        setData(null);
+        setError(null);
+
+        setStatus("pending");
+
+        const data = await aiTranslateText(values);
+
+        const aiReply = data?.message.content;
+        if (!aiReply) {
+          throw new Error("aiReply error");
+        }
+
+        const _body = aiTranslateTextReplyFormat(aiReply);
+        options?.onSuccess?.(_body);
+        return _body;
+      } catch (error) {
+        setStatus("error");
+        options?.onError?.(error as Error);
+        if (options?.throwError) {
+          throw error;
+        }
+      } finally {
+        setStatus("settled");
+        options?.onSettled?.();
+      }
+    },
+    [],
+  );
+
+  return { mutate, data, error, isPending, isSuccess, isError, isSettled };
 };

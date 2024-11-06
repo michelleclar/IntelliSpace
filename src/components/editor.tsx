@@ -276,7 +276,7 @@ export const Editor = ({
               <PopoverTrigger asChild>
                 <Button
                   // TODO::AI chat
-                  disabled={disabled}
+                  disabled={disabled || isEmpty}
                   size="iconSm"
                   role="combobox"
                   variant="ghost"

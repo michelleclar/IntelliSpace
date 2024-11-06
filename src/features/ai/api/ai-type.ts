@@ -29,3 +29,13 @@ export interface AiRequestProps {
   content: string;
   token: string;
 }
+
+export type AiResponseType = string | null;
+
+export type AiOptions = {
+  onSuccess?: (data: AiResponseType) => void;
+  onError?: (error: Error) => void;
+  onSettled?: () => void;
+  throwError?: boolean;
+};
+

@@ -16,20 +16,11 @@ import {
   Loader,
   MessageCircleQuestion,
 } from "lucide-react";
-import {
-  aiTranslateText,
-  aiTranslateTextReplyFormat,
-} from "@/features/ai/api/ai-translate-text";
+import { useAiTranslateText } from "@/features/ai/api/ai-translate-text";
 import { useGetSystemconfig } from "@/features/ai/api/use-get-systemconfig";
-import {
-  aiOptimizationUserPrompt,
-  aiOptimizationUserPromptReplyFormat,
-} from "@/features/ai/api/ai-optimization-user-prompt";
-import { AiRequestProps, Choice } from "@/features/ai/api/ai-type";
-import {
-  aiExplainCode,
-  aiExplainCodeReplyFormat,
-} from "@/features/ai/api/ai-explain-code";
+import { useAiOptimizationUserPrompt } from "@/features/ai/api/ai-optimization-user-prompt";
+import { AiOptions, AiRequestProps } from "@/features/ai/api/ai-type";
+import { useAiExplainCode } from "@/features/ai/api/ai-explain-code";
 
 const Editor = dynamic(() => import("@/components/editor"), { ssr: false });
 
@@ -59,6 +50,10 @@ export const ChatInput = ({ placeholder }: ChatInputProps) => {
   const { mutate: generateUploadUrl } = useGenerateUploadUrl();
   const channelId = useChannelId();
   const workspaceId = useWorkspaceId();
+  const { mutate: aiExplainCode } = useAiExplainCode();
+  const { mutate: aiTranslateText } = useAiTranslateText();
+  const { mutate: aiOptimizationUserPrompt } = useAiOptimizationUserPrompt();
+
   const { data: systemconfig, isLoading: isLoadingSystemconfig } =
     useGetSystemconfig();
 
@@ -112,9 +107,9 @@ export const ChatInput = ({ placeholder }: ChatInputProps) => {
       });
       setEditorKey((prevKey) => prevKey + 1);
       return id;
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       toast.error("Failed to send message");
+      console.error(error);
     } finally {
       setIsPending(false);
       editorRef.current?.enable(true);
@@ -124,39 +119,44 @@ export const ChatInput = ({ placeholder }: ChatInputProps) => {
   const aiReplyMessage = async ({
     aiReplyProps: { userMessage, text, image },
     aiExecuteMethod,
-    aiReplyFormatMethod,
   }: {
     aiReplyProps: AiReplyProps;
-    aiExecuteMethod: (args: AiRequestProps) => Promise<Choice | undefined>;
-    aiReplyFormatMethod: (args: string) => string;
+    aiExecuteMethod: (
+      values: AiRequestProps,
+      options?: AiOptions,
+    ) => Promise<string | undefined>;
   }) => {
     const parentMessageId = await handleCreateMessage(
       { channelId, workspaceId, body: userMessage, image: void 0 },
       { _image: image },
     );
 
-    if (!text) throw new Error("Ai reply message is null");
-    await aiExecuteMethod({ content: text, token: systemconfig.aiApiToken });
-    const choice = await aiExecuteMethod({
-      content: text,
-      token: systemconfig.aiApiToken,
-    });
+    try {
+      if (!text) throw new Error("Ai reply message is null");
+      const data = await aiExecuteMethod(
+        {
+          content: text,
+          token: systemconfig.aiApiToken,
+        },
+        { throwError: true },
+      );
 
-    const aiReply = choice?.message.content;
+      if (!data) throw new Error("Ai reply message is null");
 
-    if (!aiReply) throw new Error("Ai reply message is null");
-    const aiReplyFormatToQuill = aiReplyFormatMethod(aiReply);
-
-    handleCreateMessage(
-      {
-        channelId,
-        workspaceId,
-        parentMessageId,
-        body: aiReplyFormatToQuill,
-        image: void 0,
-      },
-      { _image: null },
-    );
+      handleCreateMessage(
+        {
+          channelId,
+          workspaceId,
+          parentMessageId,
+          body: data,
+          image: void 0,
+        },
+        { _image: null },
+      );
+    } catch (error) {
+      toast.error("Failed to send message");
+      console.log(error);
+    }
   };
 
   // NOTE: translate form ai ,and ai reply formated 'Quill'
@@ -168,7 +168,6 @@ export const ChatInput = ({ placeholder }: ChatInputProps) => {
     aiReplyMessage({
       aiReplyProps: { userMessage, text, image },
       aiExecuteMethod: aiTranslateText,
-      aiReplyFormatMethod: aiTranslateTextReplyFormat,
     });
   };
 
@@ -181,7 +180,6 @@ export const ChatInput = ({ placeholder }: ChatInputProps) => {
     aiReplyMessage({
       aiReplyProps: { userMessage, text, image },
       aiExecuteMethod: aiOptimizationUserPrompt,
-      aiReplyFormatMethod: aiOptimizationUserPromptReplyFormat,
     });
   };
 
@@ -194,7 +192,6 @@ export const ChatInput = ({ placeholder }: ChatInputProps) => {
     aiReplyMessage({
       aiReplyProps: { userMessage, text, image },
       aiExecuteMethod: aiExplainCode,
-      aiReplyFormatMethod: aiExplainCodeReplyFormat,
     });
   };
 
