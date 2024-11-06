@@ -16,7 +16,9 @@ import { usePanel } from "@/hooks/use-panel";
 import { ThreadBar } from "@/components/thread-bar";
 import { useState } from "react";
 import { Op } from "quill/core";
-import { aiTranslateText } from "@/features/ai/api/ai-translate-text";
+import {
+  useAiTransportText,
+} from "@/features/ai/api/ai-translate-text";
 import { useGetSystemconfig } from "@/features/ai/api/use-get-systemconfig";
 
 interface MessageProps {
@@ -78,6 +80,7 @@ export const Message = ({
     useRemoveMessage();
   const { mutate: toggleReaction, isPending: isTogglingReaction } =
     useToggleReaction();
+  const { mutate: aiTranslateText } = useAiTransportText();
 
   const { parentMessageId, onOpenMessage, onOpenProfile, onClose } = usePanel();
   const { data: systemconfig, isLoading: isLoadingSystemconfig } =
@@ -150,7 +153,7 @@ export const Message = ({
       token: systemconfig.aiApiToken,
     });
     if (r !== void 0) {
-      setTranslateText(r.message.content);
+      setTranslateText(r);
     }
   };
   if (isCompact) {
