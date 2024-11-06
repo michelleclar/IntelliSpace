@@ -16,7 +16,7 @@ import {
   Loader,
   MessageCircleQuestion,
 } from "lucide-react";
-import { useAiTransportText } from "@/features/ai/api/ai-translate-text";
+import { useAiTranslateText } from "@/features/ai/api/ai-translate-text";
 import { useGetSystemconfig } from "@/features/ai/api/use-get-systemconfig";
 import { useAiOptimizationUserPrompt } from "@/features/ai/api/ai-optimization-user-prompt";
 import { AiOptions, AiRequestProps } from "@/features/ai/api/ai-type";
@@ -51,7 +51,7 @@ export const ChatInput = ({ placeholder }: ChatInputProps) => {
   const channelId = useChannelId();
   const workspaceId = useWorkspaceId();
   const { mutate: aiExplainCode } = useAiExplainCode();
-  const { mutate: aiTranslateText } = useAiTransportText();
+  const { mutate: aiTranslateText } = useAiTranslateText();
   const { mutate: aiOptimizationUserPrompt } = useAiOptimizationUserPrompt();
 
   const { data: systemconfig, isLoading: isLoadingSystemconfig } =

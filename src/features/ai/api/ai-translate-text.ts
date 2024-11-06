@@ -53,7 +53,7 @@ const aiTranslateText = async ({ content, token }: AiRequestProps) => {
 
   return void 0;
 };
-export const useAiTransportText= () => {
+export const useAiTranslateText= () => {
   const [data, setData] = useState<AiResponseType>(null);
   const [error, setError] = useState<Error | null>(null);
 
