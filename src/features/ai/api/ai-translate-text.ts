@@ -95,7 +95,7 @@ export const useAiTranslateText= () => {
         options?.onSettled?.();
       }
     },
-    [aiTranslateText],
+    [],
   );
 
   return { mutate, data, error, isPending, isSuccess, isError, isSettled };

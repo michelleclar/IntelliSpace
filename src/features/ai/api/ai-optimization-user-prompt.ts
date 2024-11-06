@@ -96,7 +96,7 @@ export const useAiOptimizationUserPrompt = () => {
         options?.onSettled?.();
       }
     },
-    [aiOptimizationUserPrompt],
+    [],
   );
 
   return { mutate, data, error, isPending, isSuccess, isError, isSettled };

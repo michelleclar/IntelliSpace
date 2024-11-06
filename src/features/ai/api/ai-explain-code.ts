@@ -93,7 +93,7 @@ export const useAiExplainCode = () => {
         options?.onSettled?.();
       }
     },
-    [aiExplainCode],
+    [],
   );
 
   return { mutate, data, error, isPending, isSuccess, isError, isSettled };

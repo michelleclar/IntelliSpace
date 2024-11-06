@@ -96,7 +96,7 @@ export const useAiChatbot = () => {
         options?.onSettled?.();
       }
     },
-    [aiChatbot],
+    [],
   );
 
   return { mutate, data, error, isPending, isSuccess, isError, isSettled };
