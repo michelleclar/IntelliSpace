@@ -1,13 +1,14 @@
 import { aiReplyFormatToDelta } from "@/features/ai/api/utils";
-import { AiReply, AiRequestProps } from "./ai-type";
+import { AiOptions, AiReply, AiRequestProps, AiResponseType } from "./ai-type";
+import { useCallback, useMemo, useState } from "react";
 
-export const aiOptimizationUserPromptReplyFormat = (aiReply: string) => {
+const aiOptimizationUserPromptReplyFormat = (aiReply: string) => {
   return JSON.stringify(
     aiReplyFormatToDelta({ aiReply, modelName: "Optimization Prompt" }),
   );
 };
 
-export const aiOptimizationUserPrompt = async ({
+const aiOptimizationUserPrompt = async ({
   content,
   token,
 }: AiRequestProps) => {
@@ -51,4 +52,52 @@ export const aiOptimizationUserPrompt = async ({
   }
 
   return void 0;
+};
+
+export const useAiOptimizationUserPrompt = () => {
+  const [data, setData] = useState<AiResponseType>(null);
+  const [error, setError] = useState<Error | null>(null);
+
+  const [status, setStatus] = useState<
+    "success" | "error" | "settled" | "pending" | null
+  >(null);
+
+  const isPending = useMemo(() => status === "pending", [status]);
+  const isSuccess = useMemo(() => status === "success", [status]);
+  const isError = useMemo(() => status === "error", [status]);
+  const isSettled = useMemo(() => status === "settled", [status]);
+
+  const mutate = useCallback(
+    async (values: AiRequestProps, options?: AiOptions) => {
+      try {
+        setData(null);
+        setError(null);
+
+        setStatus("pending");
+
+        const data = await aiOptimizationUserPrompt(values);
+
+        const aiReply = data?.message.content;
+        if (!aiReply) {
+          throw new Error("aiReply error");
+        }
+
+        const _body = aiOptimizationUserPromptReplyFormat(aiReply);
+        options?.onSuccess?.(_body);
+        return _body;
+      } catch (error) {
+        setStatus("error");
+        options?.onError?.(error as Error);
+        if (options?.throwError) {
+          throw error;
+        }
+      } finally {
+        setStatus("settled");
+        options?.onSettled?.();
+      }
+    },
+    [aiOptimizationUserPrompt],
+  );
+
+  return { mutate, data, error, isPending, isSuccess, isError, isSettled };
 };

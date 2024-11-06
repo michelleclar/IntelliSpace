@@ -12,7 +12,9 @@ import { Id } from "../../../../../../convex/_generated/dataModel";
 import { useCreateMessage } from "@/features/messages/api/use-create-message";
 import { useGenerateUploadUrl } from "@/features/upload/api/use-generate-upload-url";
 import { useGetSystemconfig } from "@/features/ai/api/use-get-systemconfig";
-import { aiChatbot, aiChatbotReplyFormat } from "@/features/ai/api/ai-chatbot";
+import {
+  useAiChatbot,
+} from "@/features/ai/api/ai-chatbot";
 
 const Editor = dynamic(() => import("@/components/editor"), { ssr: false });
 
@@ -37,6 +39,7 @@ export const ChatInput = ({ placeholder }: ChatInputProps) => {
 
   const { mutate: createMessage } = useCreateMessage();
   const { mutate: generateUploadUrl } = useGenerateUploadUrl();
+  const { mutate: aiChatbot } = useAiChatbot();
 
   const { data: systemconfig, isLoading: isLoadingSystemconfig } =
     useGetSystemconfig();
@@ -112,23 +115,23 @@ export const ChatInput = ({ placeholder }: ChatInputProps) => {
     body: string;
     image: File | null;
   }) => {
-    const r = await handleCreateMessage(
-      { channelId: chatbotId, workspaceId, body, image: void 0 },
-      { _image: image },
-    );
-    if (r === undefined) return;
-    const token = systemconfig.aiApiToken;
-    const content = r.content;
-    const choice = await aiChatbot({ content, token });
-    const aiReply = choice?.message.content;
-    if (aiReply === undefined) {
-      throw new Error("Ai error");
+    try {
+      const r = await handleCreateMessage(
+        { channelId: chatbotId, workspaceId, body, image: void 0 },
+        { _image: image },
+      );
+      if (r === undefined) return;
+      const token = systemconfig.aiApiToken;
+      const content = r.content;
+      const choice = await aiChatbot({ content, token }, { throwError: true });
+      if (!choice) throw new Error("chat bot reply failed");
+      await handleCreateMessage(
+        { channelId: chatbotId, workspaceId, body: choice, image: void 0 },
+        { _image: image },
+      );
+    } catch (error) {
+      toast.error("chatbot:" + error);
     }
-    const _body = aiChatbotReplyFormat(aiReply);
-    await handleCreateMessage(
-      { channelId: chatbotId, workspaceId, body: _body, image: void 0 },
-      { _image: image },
-    );
   };
 
   return (

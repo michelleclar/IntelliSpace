@@ -1,13 +1,14 @@
 import { aiReplyFormatToDelta } from "./utils";
-import { AiReply, AiRequestProps } from "./ai-type";
+import { AiOptions, AiReply, AiRequestProps, AiResponseType } from "./ai-type";
+import { useCallback, useMemo, useState } from "react";
 
-export const aiExplainCodeReplyFormat = (aiReply: string) => {
+const aiExplainCodeReplyFormat = (aiReply: string) => {
   return JSON.stringify(
     aiReplyFormatToDelta({ aiReply, modelName: "Explain Code" }),
   );
 };
 
-export const aiExplainCode = async ({ content, token }: AiRequestProps) => {
+const aiExplainCode = async ({ content, token }: AiRequestProps) => {
   const message = {
     messages: [
       {
@@ -47,5 +48,53 @@ export const aiExplainCode = async ({ content, token }: AiRequestProps) => {
     return choices.choices[0];
   }
 
-  return void 0;
+  return null;
+};
+
+export const useAiExplainCode = () => {
+  const [data, setData] = useState<AiResponseType>(null);
+  const [error, setError] = useState<Error | null>(null);
+
+  const [status, setStatus] = useState<
+    "success" | "error" | "settled" | "pending" | null
+  >(null);
+
+  const isPending = useMemo(() => status === "pending", [status]);
+  const isSuccess = useMemo(() => status === "success", [status]);
+  const isError = useMemo(() => status === "error", [status]);
+  const isSettled = useMemo(() => status === "settled", [status]);
+
+  const mutate = useCallback(
+    async (values: AiRequestProps, options?: AiOptions) => {
+      try {
+        setData(null);
+        setError(null);
+
+        setStatus("pending");
+
+        const data = await aiExplainCode(values);
+
+        const aiReply = data?.message.content;
+        if (!aiReply) {
+          throw new Error("aiReply error");
+        }
+
+        const _body = aiExplainCodeReplyFormat(aiReply);
+        options?.onSuccess?.(_body);
+        return _body;
+      } catch (error) {
+        setStatus("error");
+        options?.onError?.(error as Error);
+        if (options?.throwError) {
+          throw error;
+        }
+      } finally {
+        setStatus("settled");
+        options?.onSettled?.();
+      }
+    },
+    [aiExplainCode],
+  );
+
+  return { mutate, data, error, isPending, isSuccess, isError, isSettled };
 };
