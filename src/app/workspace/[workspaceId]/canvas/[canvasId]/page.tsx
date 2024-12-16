@@ -45,7 +45,7 @@ export default function Home() {
       <Canvas
         defaultValue={
           canvas.layout === undefined
-            ? canvas.layout
+            ? localStorage.getItem(id)
             : JSON.parse(canvas.layout)
         }
         innerRef={canvasRef}
