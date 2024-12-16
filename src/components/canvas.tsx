@@ -106,6 +106,7 @@ const Canvas = ({ defaultValue, innerRef, id }: CanvasProps) => {
         if (!elements || !elements.length) {
           return;
         }
+        appState["collaborators"] = [];
         const value = { elements, appState, files };
         localStorage.setItem(id, JSON.stringify(value));
       }}
