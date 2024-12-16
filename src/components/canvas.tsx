@@ -1,6 +1,7 @@
 "use client";
 import { Excalidraw } from "@excalidraw/excalidraw";
 import {
+    Collaborator,
   ExcalidrawImperativeAPI,
   type ExcalidrawInitialDataState,
 } from "@excalidraw/excalidraw/types/types";
@@ -106,7 +107,8 @@ const Canvas = ({ defaultValue, innerRef, id }: CanvasProps) => {
         if (!elements || !elements.length) {
           return;
         }
-        appState.delete("collaborators");
+        appState.collaborators = new Map<string,Collaborator>();
+
         const value = { elements, appState, files };
         localStorage.setItem(id, JSON.stringify(value));
       }}
