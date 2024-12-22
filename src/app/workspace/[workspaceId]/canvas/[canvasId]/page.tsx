@@ -1,9 +1,7 @@
 "use client";
 import dynamic from "next/dynamic";
 import { useRef } from "react";
-import {
-  ExcalidrawImperativeAPI,
-} from "@excalidraw/excalidraw/types/types";
+import { ExcalidrawImperativeAPI } from "@excalidraw/excalidraw/types/types";
 import { useCanvasId } from "@/hooks/use-canvas-id";
 import { Header } from "@/app/workspace/[workspaceId]/canvas/[canvasId]/header";
 import { useGetCanvas } from "@/features/canvas/api/use-get-canvas";
@@ -38,15 +36,20 @@ export default function Home() {
       </div>
     );
   }
+  console.log(canvas.layout);
+  const localLayout = localStorage.getItem(id);
+  console.log(localLayout);
 
   return (
     <div className="flex-col flex h-full">
       <Header id={id} title={canvas?.name} />
       <Canvas
         defaultValue={
-          canvas.layout === undefined
-            ? localStorage.getItem(id)
-            : JSON.parse(canvas.layout)
+          localLayout === null
+            ? canvas.layout === undefined
+              ? null
+              : JSON.parse(canvas.layout)
+            : JSON.parse(localLayout)
         }
         innerRef={canvasRef}
         id={id}
