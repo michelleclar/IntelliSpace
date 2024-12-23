@@ -10,15 +10,15 @@ import { ExtensionKit } from "@/components/editor/extensions/extension-kit";
 import { userColors, userNames } from "../lib/constants";
 import { randomElement } from "../lib/utils";
 import type { EditorUser } from "../components/BlockEditor/types";
-import { initialContent } from "@/components/editor/lib/data/initialContent";
+// import { initialContent } from "@/components/editor/lib/data/initialContent";
 import { Ai } from "@/components/editor/extensions/Ai";
 import { AiImage, AiWriter } from "@/components/editor/extensions";
 
-declare global {
-  interface Window {
-    editor: Editor | null;
-  }
-}
+// declare global {
+//   interface Window {
+//     editor: Editor | null;
+//   }
+// }
 
 export const useBlockEditor = ({
   aiToken,
@@ -26,12 +26,14 @@ export const useBlockEditor = ({
   provider,
   userId,
   userName = "Maxi",
+  initialContent,
 }: {
   aiToken?: string;
   ydoc: YDoc | null;
   provider?: TiptapCollabProvider | null | undefined;
   userId?: string;
   userName?: string;
+  initialContent: string;
 }) => {
   const [collabState, setCollabState] = useState<WebSocketStatus>(
     provider ? WebSocketStatus.Connecting : WebSocketStatus.Disconnected,
@@ -42,19 +44,24 @@ export const useBlockEditor = ({
       immediatelyRender: true,
       shouldRerenderOnTransaction: false,
       autofocus: true,
+      onUpdate: (ctx) => {
+        console.log(ctx.editor.getHTML());
+      },
       onCreate: (ctx) => {
-        if (provider && !provider.isSynced) {
-          provider.on("synced", () => {
-            setTimeout(() => {
-              if (ctx.editor.isEmpty) {
-                ctx.editor.commands.setContent(initialContent);
-              }
-            }, 0);
-          });
-        } else if (ctx.editor.isEmpty) {
-          ctx.editor.commands.setContent(initialContent);
-          ctx.editor.commands.focus("start", { scrollIntoView: true });
-        }
+        ctx.editor.commands.setContent(initialContent)
+        // cooperation
+        // if (provider && !provider.isSynced) {
+        //   provider.on("synced", () => {
+        //     setTimeout(() => {
+        //       if (ctx.editor.isEmpty) {
+        //         ctx.editor.commands.setContent(initialContent);
+        //       }
+        //     }, 0);
+        //   });
+        // } else if (ctx.editor.isEmpty) {
+        //   ctx.editor.commands.setContent(initialContent);
+        //   ctx.editor.commands.focus("start", { scrollIntoView: true });
+        // }
       },
       extensions: [
         ...ExtensionKit({
@@ -125,7 +132,7 @@ export const useBlockEditor = ({
     });
   }, [provider]);
 
-  window.editor = editor;
+  // window.editor = editor;
 
   return { editor, users, collabState };
 };
