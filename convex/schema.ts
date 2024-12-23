@@ -61,7 +61,7 @@ const schema = defineSchema({
     name: v.string(),
     layout: v.optional(v.string()),
   }).index("by_workspace_id", ["workspaceId"]),
-  knowledge: defineTable({
+  documents: defineTable({
     workspaceId: v.id("workspaces"),
     parentId: v.id("knowledge"),
     isPublished: v.boolean(),
