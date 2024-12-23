@@ -1,44 +1,52 @@
-import { EditorContent } from '@tiptap/react'
-import React, { useRef } from 'react'
+import { EditorContent } from "@tiptap/react";
+import React, { useRef } from "react";
 
-import { LinkMenu } from '../menus'
+import { LinkMenu } from "../menus";
 
-import { useBlockEditor } from '@/hooks/useBlockEditor'
+import { useBlockEditor } from "@/components/editor/hooks/useBlockEditor";
 
-import '@/components/editor/styles/index.css'
+import "@/components/editor/styles/index.css";
 
-import { Sidebar } from '../Sidebar'
-import ImageBlockMenu from '../../extensions/ImageBlock/components/ImageBlockMenu'
-import { ColumnsMenu } from '../../extensions/MultiColumn/menus'
-import { TableColumnMenu, TableRowMenu } from '../../extensions/Table/menus'
-import { EditorHeader } from './components/EditorHeader'
-import { TextMenu } from '../menus/TextMenu'
-import { ContentItemMenu } from '../menus/ContentItemMenu'
-import { useSidebar } from '@/hooks/useSidebar'
-import * as Y from 'yjs'
-import { TiptapCollabProvider } from '@hocuspocus/provider'
+import { Sidebar } from "../Sidebar";
+import ImageBlockMenu from "../../extensions/ImageBlock/components/ImageBlockMenu";
+import { ColumnsMenu } from "../../extensions/MultiColumn/menus";
+import { TableColumnMenu, TableRowMenu } from "../../extensions/Table/menus";
+import { EditorHeader } from "./components/EditorHeader";
+import { TextMenu } from "../menus/TextMenu";
+import { ContentItemMenu } from "../menus/ContentItemMenu";
+import { useSidebar } from "@/hooks/useSidebar";
+import * as Y from "yjs";
+import { TiptapCollabProvider } from "@hocuspocus/provider";
 
 export const BlockEditor = ({
   aiToken,
   ydoc,
   provider,
 }: {
-  aiToken?: string
-  ydoc: Y.Doc | null
-  provider?: TiptapCollabProvider | null | undefined
+  aiToken?: string;
+  ydoc: Y.Doc | null;
+  provider?: TiptapCollabProvider | null | undefined;
 }) => {
-  const menuContainerRef = useRef(null)
+  const menuContainerRef = useRef(null);
 
-  const leftSidebar = useSidebar()
-  const { editor, users, collabState } = useBlockEditor({ aiToken, ydoc, provider })
+  const leftSidebar = useSidebar();
+  const { editor, users, collabState } = useBlockEditor({
+    aiToken,
+    ydoc,
+    provider,
+  });
 
   if (!editor || !users) {
-    return null
+    return null;
   }
 
   return (
     <div className="flex h-full" ref={menuContainerRef}>
-      <Sidebar isOpen={leftSidebar.isOpen} onClose={leftSidebar.close} editor={editor} />
+      <Sidebar
+        isOpen={leftSidebar.isOpen}
+        onClose={leftSidebar.close}
+        editor={editor}
+      />
       <div className="relative flex flex-col flex-1 h-full overflow-hidden">
         <EditorHeader
           editor={editor}
@@ -57,7 +65,7 @@ export const BlockEditor = ({
         <ImageBlockMenu editor={editor} appendTo={menuContainerRef} />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default BlockEditor
+export default BlockEditor;
