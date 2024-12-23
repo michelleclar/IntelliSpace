@@ -1,8 +1,8 @@
-import { Icon } from '@/components/ui/Icon'
+import { Icon } from '../../ui/Icon'
 import { EditorInfo } from './EditorInfo'
 import { EditorUser } from '../types'
 import { WebSocketStatus } from '@hocuspocus/provider'
-import { Toolbar } from '@/components/ui/Toolbar'
+import { Toolbar } from '../../ui/Toolbar'
 import { Editor } from '@tiptap/core'
 import { useEditorState } from '@tiptap/react'
 
