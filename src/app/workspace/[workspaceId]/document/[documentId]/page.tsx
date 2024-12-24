@@ -4,11 +4,11 @@ import 'iframe-resizer/js/iframeResizer.contentWindow'
 import {useSearchParams} from 'next/navigation'
 import {useCallback, useEffect, useState} from 'react'
 
-import {BlockEditor} from '../../../../../components/editor/components/BlockEditor'
+import {BlockEditor} from '@/components/editor/components/BlockEditor'
 import {createPortal} from 'react-dom'
-import {Surface} from '../../../../../components/editor/components/ui/Surface'
-import {Toolbar} from '../../../../../components/editor/components/ui/Toolbar'
-import {Icon} from '../../../../../components/editor/components/ui/Icon'
+import {Surface} from '@/components/editor/components/ui/Surface'
+import {Toolbar} from '@/components/editor/components/ui/Toolbar'
+import {Icon} from '@/components/editor/components/ui/Icon'
 import {useCollaboration} from '@/hooks/use-collaboration'
 
 const useDarkmode = () => {
@@ -47,6 +47,11 @@ export default function Document({params}: { params: { room: string } }) {
         docId: params.room,
         enabled: parseInt(searchParams?.get('noCollab') as string) !== 1,
     })
+    // TODO: need show all user document,
+    //  Tips: 1 other user doc need isArchived false
+    //        2 other user doc need isPublished false
+    // TODO: trash only show self doc
+    // TODO: show doc is 
 
     useEffect(() => {
         // fetch data
@@ -97,7 +102,7 @@ export default function Document({params}: { params: { room: string } }) {
     return (
         <>
             {DarkModeSwitcher}
-            <BlockEditor aiToken={aiToken ?? undefined} ydoc={providerState.yDoc} provider={providerState.provider}/>
+            <BlockEditor aiToken={aiToken ?? undefined} ydoc={providerState.yDoc} provider={providerState.provider} initialContent={"write"}/>
         </>
     )
 }

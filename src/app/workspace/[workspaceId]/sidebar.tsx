@@ -26,7 +26,7 @@ export const Sidebar = () => {
         // TODO:  can update
         icon={Library}
         label="Knowledge"
-        isActive={pathname.includes("/knowledge")}
+        isActive={pathname.includes("/document")}
       />
       <SidebarButton icon={MessagesSquare} label="DMs" className="hidden" />
       <SidebarButton

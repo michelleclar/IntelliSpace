@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useEditor, useEditorState } from "@tiptap/react";
-import type { AnyExtension, Editor } from "@tiptap/core";
+import type { AnyExtension } from "@tiptap/core";
 import Collaboration from "@tiptap/extension-collaboration";
 import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
 import { TiptapCollabProvider, WebSocketStatus } from "@hocuspocus/provider";
@@ -48,6 +48,8 @@ export const useBlockEditor = ({
         console.log(ctx.editor.getHTML());
       },
       onCreate: (ctx) => {
+          // TODO: step1 need add default template
+          // TODO: step2 choice template
         ctx.editor.commands.setContent(initialContent)
         // cooperation
         // if (provider && !provider.isSynced) {

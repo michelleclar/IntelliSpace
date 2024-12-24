@@ -151,7 +151,7 @@ export const ExtensionKit = ({ provider }: ExtensionKitProps) => [
   Placeholder.configure({
     includeChildren: true,
     showOnlyCurrent: false,
-    placeholder: () => '',
+    placeholder: () => 'Write something …',
   }),
   SlashCommand,
   Focus,
