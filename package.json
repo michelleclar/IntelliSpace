@@ -86,7 +86,7 @@
     "lowlight": "^3.1.0",
     "lucide-react": "^0.447.0",
     "nanoid": "^4.0.2",
-    "next": "14.2.13",
+    "next": "14.2.15",
     "next-themes": "^0.3.0",
     "nuqs": "^1.20.0",
     "postcss": "8.4.27",
@@ -102,7 +102,7 @@
     "react-verification-input": "^4.1.2",
     "sonner": "^1.5.0",
     "tailwind-merge": "^2.5.2",
-    "tailwindcss": "3.3.3",
+    "tailwindcss": "^3.4.1",
     "tailwindcss-animate": "^1.0.7",
     "tippy.js": "^6.3.7",
     "uuid": "^10.0.0",
@@ -115,8 +115,6 @@
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "14.2.13",
-    "postcss": "^8",
-    "tailwindcss": "^3.4.1",
     "typescript": "^5"
   }
 }
