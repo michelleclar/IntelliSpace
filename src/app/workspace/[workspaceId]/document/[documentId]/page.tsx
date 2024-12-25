@@ -50,8 +50,8 @@ export default function Document({params}: { params: { room: string } }) {
     // TODO: need show all user document,
     //  Tips: 1 other user doc need isArchived false
     //        2 other user doc need isPublished false
+    // TODO: only manipulate own doc
     // TODO: trash only show self doc
-    // TODO: show doc is 
 
     useEffect(() => {
         // fetch data
