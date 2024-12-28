@@ -20,35 +20,29 @@ const sidebarItemVariants = cva(
     },
 );
 
-interface SidebarItemProps {
+interface DocumentSidebarItemProps {
     label: string;
     icon: LucideIcon | IconType;
     variant?: VariantProps<typeof sidebarItemVariants>["variant"];
     redirect?: string;
-    leave?: number;
 }
 
-const calculateLeaveSpacing = (leave: number) => {
-    return `mt-${leave * 4}`;
-};
-export const SidebarItem = ({
+export const DocumentList = ({
                                 label,
                                 icon: Icon,
                                 variant,
                                 redirect = "",
-                                leave = 0,
-                            }: SidebarItemProps) => {
-    const dynamicMarginTop = calculateLeaveSpacing(leave);
+                            }: DocumentSidebarItemProps) => {
     return (
         <>
             <Button
                 variant="transparent"
                 size="sm"
-                className={cn(sidebarItemVariants({variant}), dynamicMarginTop)}
+                className={cn(sidebarItemVariants({ variant }))}
                 asChild
             >
                 <Link href={redirect}>
-                    <Icon className="size-3.5"/>
+                    <Icon className="size-3.5" />
                     <span className="text-sm truncate">{label}</span>
                 </Link>
             </Button>

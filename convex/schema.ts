@@ -67,6 +67,7 @@ const schema = defineSchema({
         isPublished: v.boolean(),
         isArchived: v.boolean(),
         userId: v.id("users"),
+        title: v.string(),
         content: v.optional(v.string()),
     }).index("by_workspace_id", ["workspaceId"])
         .index("by_parent_id", ["parentId"])

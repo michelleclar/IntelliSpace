@@ -18,6 +18,7 @@ import type * as canvases from "../canvases.js";
 import type * as channels from "../channels.js";
 import type * as chatbot from "../chatbot.js";
 import type * as conversations from "../conversations.js";
+import type * as document from "../document.js";
 import type * as http from "../http.js";
 import type * as members from "../members.js";
 import type * as messages from "../messages.js";
@@ -41,6 +42,7 @@ declare const fullApi: ApiFromModules<{
   channels: typeof channels;
   chatbot: typeof chatbot;
   conversations: typeof conversations;
+  document: typeof document;
   http: typeof http;
   members: typeof members;
   messages: typeof messages;

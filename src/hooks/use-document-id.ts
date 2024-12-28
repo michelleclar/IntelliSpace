@@ -1,7 +1,7 @@
 import { useParams } from "next/navigation";
 import { Id } from "../../convex/_generated/dataModel";
 
-export function useKnowledgeId() {
+export function useDocumentId() {
   const params = useParams();
-  return params.knowledgeId as Id<"documents">;
+  return params.documentId as Id<"document">;
 }

@@ -51,7 +51,7 @@ export const archive = mutation({
     },
 });
 
-export const getSidebar = query({
+export const getDocumentListIsNotArchive = query({
     args: {
         parentDocument: v.optional(v.id("document")),
     },
@@ -74,6 +74,8 @@ export const create = mutation({
     args: {
         workspaceId: v.id("workspaces"),
         parentDocument: v.optional(v.id("document")),
+        template: v.optional(v.id("content")),
+        title: v.string()
     },
     handler: async (ctx, args) => {
         const userId = await getAuthUserId(ctx);
@@ -81,7 +83,9 @@ export const create = mutation({
 
         return await ctx.db.insert("document", {
             parentId: args.parentDocument,
+            content: args.template,
             userId: userId,
+            title: args.title,
             workspaceId: args.workspaceId,
             isArchived: false,
             isPublished: false,
@@ -202,90 +206,30 @@ export const getById = query({
     },
 });
 
-// export const update = mutation({
-//     args: {
-//         id: v.id("document"),
-//         content: v.optional(v.string()),
-//         isPublished: v.optional(v.boolean()),
-//     },
-//     handler: async (ctx, args) => {
-//         const userId = await getAuthUserId(ctx);
-//         if (!userId) throw new Error(Fields.UNAUTHORIZED);
-//
-//         const {id, ...rest} = args;
-//
-//         const existingDocument = await ctx.db.get(args.id);
-//
-//         if (!existingDocument) {
-//             throw new Error("Document not found");
-//         }
-//
-//         if (existingDocument.userId !== userId) {
-//             throw new Error("Unauthorized");
-//         }
-//
-//         const document = await ctx.db.patch(args.id, {
-//             ...rest,
-//         });
-//
-//         return document;
-//     },
-// });
-//
-// export const removeIcon = mutation({
-//     args: {id: v.id("documents")},
-//     handler: async (ctx, args) => {
-//         const identity = await ctx.auth.getUserIdentity();
-//
-//         if (!identity) {
-//             throw new Error("Not authenticated");
-//         }
-//
-//         const userId = identity.subject;
-//
-//         const existingDocument = await ctx.db.get(args.id);
-//
-//         if (!existingDocument) {
-//             throw new Error("Document not found");
-//         }
-//
-//         if (existingDocument.userId !== userId) {
-//             throw new Error("Unauthorized");
-//         }
-//
-//         const document = await ctx.db.patch(args.id, {
-//             icon: undefined,
-//         });
-//
-//         return document;
-//     },
-// });
-//
-// export const removeCoverImage = mutation({
-//     args: {id: v.id("documents")},
-//     handler: async (ctx, args) => {
-//         const identity = await ctx.auth.getUserIdentity();
-//
-//         if (!identity) {
-//             throw new Error("Not authenticated");
-//         }
-//
-//         const userId = identity.subject;
-//
-//         const existingDocument = await ctx.db.get(args.id);
-//
-//         if (!existingDocument) {
-//             throw new Error("Document not found");
-//         }
-//
-//         if (existingDocument.userId !== userId) {
-//             throw new Error("Unauthorized");
-//         }
-//
-//         const document = await ctx.db.patch(args.id, {
-//             coverImage: undefined,
-//         });
-//
-//         return document;
-//     },
-// });
+export const update = mutation({
+    args: {
+        id: v.id("document"),
+        content: v.optional(v.string()),
+        isPublished: v.optional(v.boolean()),
+    },
+    handler: async (ctx, args) => {
+        const userId = await getAuthUserId(ctx);
+        if (!userId) throw new Error(Fields.UNAUTHORIZED);
+
+        const {id, ...rest} = args;
+
+        const existingDocument = await ctx.db.get(id);
+
+        if (!existingDocument) {
+            throw new Error("Document not found");
+        }
+
+        if (existingDocument.userId !== userId) {
+            throw new Error("Unauthorized");
+        }
+
+        return await ctx.db.patch(args.id, {
+            ...rest,
+        });
+    },
+});
