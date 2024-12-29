@@ -53,7 +53,7 @@ export const archive = mutation({
 
 export const getDocumentListIsNotArchive = query({
     args: {
-        parentDocument: v.optional(v.id("document")),
+        parentDocumentId: v.optional(v.id("document")),
     },
     handler: async (ctx, args) => {
         const userId = await getAuthUserId(ctx);
@@ -62,7 +62,7 @@ export const getDocumentListIsNotArchive = query({
         return await ctx.db
             .query("document")
             .withIndex("by_parent_id_user_id", (q) =>
-                q.eq("parentId", args.parentDocument).eq("userId", userId),
+                q.eq("parentId", args.parentDocumentId).eq("userId", userId),
             )
             .filter((q) => q.eq(q.field("isArchived"), false))
             .order("desc")

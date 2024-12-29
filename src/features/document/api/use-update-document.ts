@@ -3,8 +3,12 @@ import { api } from "../../../../convex/_generated/api";
 import { useCallback, useMemo, useState } from "react";
 import { Id } from "../../../../convex/_generated/dataModel";
 
-type ResponseType = Id<"canvases"> | null;
-type RequestType = { name?: string; id: Id<"canvases">; layout?: string };
+type ResponseType = Id<"document"> | null;
+type RequestType = {
+  content?: string;
+  id: Id<"document">;
+  isPublish?: boolean;
+};
 
 type Options = {
   onSuccess?: (data: ResponseType) => void;
@@ -12,7 +16,7 @@ type Options = {
   onSettled?: () => void;
   throwError?: boolean;
 };
-export const useUpdateCanvas = () => {
+export const useUpdateDocument = () => {
   const [data, setData] = useState<ResponseType>(null);
   const [error, setError] = useState<Error | null>(null);
 
@@ -25,7 +29,7 @@ export const useUpdateCanvas = () => {
   const isError = useMemo(() => status === "error", [status]);
   const isSettled = useMemo(() => status === "settled", [status]);
 
-  const mutation = useMutation(api.canvases.update);
+  const mutation = useMutation(api.document.update);
 
   const mutate = useCallback(
     async (values: RequestType, options?: Options) => {

@@ -27,13 +27,15 @@ export const useBlockEditor = ({
   userId,
   userName = "Maxi",
   initialContent,
+  onUpdate,
 }: {
   aiToken?: string;
   ydoc: YDoc | null;
   provider?: TiptapCollabProvider | null | undefined;
   userId?: string;
   userName?: string;
-  initialContent: string;
+  initialContent?: string;
+  onUpdate: (content: string) => void;
 }) => {
   const [collabState, setCollabState] = useState<WebSocketStatus>(
     provider ? WebSocketStatus.Connecting : WebSocketStatus.Disconnected,
@@ -46,11 +48,12 @@ export const useBlockEditor = ({
       autofocus: true,
       onUpdate: (ctx) => {
         console.log(ctx.editor.getHTML());
+        onUpdate(ctx.editor.getHTML());
       },
       onCreate: (ctx) => {
-          // TODO: step1 need add default template
-          // TODO: step2 choice template
-        ctx.editor.commands.setContent(initialContent)
+        // TODO: step1 need add default template
+        // TODO: step2 choice template
+        ctx.editor.commands.setContent(!!initialContent ? initialContent : "");
         // cooperation
         // if (provider && !provider.isSynced) {
         //   provider.on("synced", () => {

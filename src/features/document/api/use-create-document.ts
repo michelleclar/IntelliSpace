@@ -6,7 +6,7 @@ import { Id } from "../../../../convex/_generated/dataModel";
 type ResponseType = Id<"document"> | null;
 type RequestType = {
   content?: string;
-  name: string;
+  title: string;
   workspaceId: Id<"workspaces">;
 };
 
