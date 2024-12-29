@@ -51,7 +51,7 @@ const useDarkmode = () => {
 
 export default function Document({ params }: { params: { room: string } }) {
   const { isDarkMode, darkMode, lightMode } = useDarkmode();
-  // const [aiToken, setAiToken] = useState<string | null | undefined>();
+  const [aiToken] = useState<string | null | undefined>();
 
   const { mutate} = useUpdateDocument();
   const documentId = useDocumentId();
