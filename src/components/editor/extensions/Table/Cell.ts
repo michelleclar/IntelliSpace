@@ -5,7 +5,7 @@ import { Decoration, DecorationSet } from '@tiptap/pm/view'
 import { getCellsInColumn, isRowSelected, selectRow } from './utils'
 
 export interface TableCellOptions {
-  HTMLAttributes: Record<string, never>
+  HTMLAttributes: Record<string, any>
 }
 
 export const TableCell = Node.create<TableCellOptions>({
