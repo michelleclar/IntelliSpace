@@ -24,6 +24,8 @@ import { useCanvasId } from "@/hooks/use-canvas-id";
 import { useGetChatbots } from "@/features/chatbot/api/use-get-chatbots";
 import { useChatbotId } from "@/hooks/use-chatbot-id";
 import { useCreateChatbotModal } from "@/features/chatbot/store/use-create-chatbot-model";
+import { DocumentItem } from "@/app/workspace/[workspaceId]/document-item";
+import { useCreateDocumentModal } from "@/features/document/store/use-create-document-model";
 
 export const WorkspaceSidebar = () => {
   const channelId = useChannelId();
@@ -38,6 +40,8 @@ export const WorkspaceSidebar = () => {
   const [_, setCanvasOpen] = useCreateCanvasModal();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [__, setChatbotOpen] = useCreateChatbotModal();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [___, setDocumentOpen] = useCreateDocumentModal();
 
   const { member, isLoading: memberIsLoading } = useCurrentMember({
     workspaceId,
@@ -61,6 +65,7 @@ export const WorkspaceSidebar = () => {
   const { canvases } = useGetCanvases({
     id: workspaceId,
   });
+  // TODO: document sidebar need alone sidebar , after maybe designed document
 
   if (
     workspaceIsLoading ||
@@ -106,6 +111,21 @@ export const WorkspaceSidebar = () => {
           variant="default"
         />
       </div>
+
+      <WorkspaceSection
+        //TODO add document list components
+        label="Document"
+        hint="New Document"
+        onNew={
+          member.role === "admin"
+            ? () => {
+                setDocumentOpen(true);
+              }
+            : void 0
+        }
+      >
+        <DocumentItem redirect={`/workspace/${workspaceId}/document`} />
+      </WorkspaceSection>
       <WorkspaceSection
         label="Channels"
         hint="New Channel"

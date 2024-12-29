@@ -19,24 +19,25 @@ export const Sidebar = () => {
         // TODO:  can update
         icon={Home}
         label="Home"
-        isActive={pathname.includes("/workspace")}
+        // TODO: need update layout , now modify to always true
+        isActive={true}
         className="hidden"
       />
       <SidebarButton
         // TODO:  can update
         icon={Library}
         label="Knowledge"
-        isActive={pathname.includes("/knowledge")}
+        isActive={pathname.includes("/document")}
       />
       <SidebarButton icon={MessagesSquare} label="DMs" className="hidden" />
       <SidebarButton
-        //TODO: not implemented yet 'Activty'
+        //TODO: not implemented yet 'Activity'
         icon={Bell}
         label="Activity"
         className="hidden"
       />
       <SidebarButton
-        //TODO: not implemented yet 'Activty'
+        //TODO: not implemented yet 'More'
         icon={MoreHorizontal}
         label="More"
         className="hidden"
