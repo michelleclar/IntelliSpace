@@ -27,7 +27,6 @@ import {
   Link,
   Placeholder,
   Selection,
-  SlashCommand,
   StarterKit,
   Subscript,
   Superscript,
@@ -38,7 +37,6 @@ import {
   TableRow,
   TextAlign,
   TextStyle,
-  TrailingNode,
   Typography,
   Underline,
   emojiSuggestion,
@@ -49,7 +47,7 @@ import {
   UniqueID,
 } from '.'
 
-import { ImageUpload } from './ImageUpload'
+
 import { TableOfContentsNode } from './TableOfContentsNode'
 import { isChangeOrigin } from '@tiptap/extension-collaboration'
 
@@ -57,7 +55,7 @@ interface ExtensionKitProps {
   provider?: HocuspocusProvider | null
 }
 
-export const ExtensionKit = ({ provider }: ExtensionKitProps) => [
+export const ExtensionKit = ({  }: ExtensionKitProps) => [
   Document,
   Columns,
   TaskList,
@@ -96,7 +94,6 @@ export const ExtensionKit = ({ provider }: ExtensionKitProps) => [
   FontSize,
   FontFamily,
   Color,
-  TrailingNode,
   Link.configure({
     openOnClick: false,
   }),
@@ -105,9 +102,6 @@ export const ExtensionKit = ({ provider }: ExtensionKitProps) => [
   CharacterCount.configure({ limit: 50000 }),
   TableOfContents,
   TableOfContentsNode,
-  ImageUpload.configure({
-    clientId: provider?.document?.clientID,
-  }),
   ImageBlock,
   FileHandler.configure({
     allowedMimeTypes: ['image/png', 'image/jpeg', 'image/gif', 'image/webp'],
@@ -153,7 +147,6 @@ export const ExtensionKit = ({ provider }: ExtensionKitProps) => [
     showOnlyCurrent: false,
     placeholder: () => 'Write something …',
   }),
-  SlashCommand,
   Focus,
   Figcaption,
   BlockquoteFigure,
