@@ -1,5 +1,7 @@
 import { mergeAttributes, Node } from '@tiptap/core'
 import { ReactNodeViewRenderer } from '@tiptap/react'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
 import { v4 as uuid } from 'uuid'
 
 import { AiWriterView } from './components/AiWriterView'

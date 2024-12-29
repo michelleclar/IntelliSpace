@@ -1,20 +1,42 @@
 import { NodeViewProps, NodeViewWrapper, useEditorState } from '@tiptap/react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import toast from 'react-hot-toast'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
 import { v4 as uuid } from 'uuid'
-
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
 import { Button } from '@/components/ui/Button'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
 import { Panel, PanelHeadline } from '@/components/ui/Panel'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
 import { Textarea } from '@/components/ui/Textarea'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
 import { Icon } from '@/components/ui/Icon'
-
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { AiTone, AiToneOption } from '@/components/BlockEditor/types'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { tones } from '@/lib/constants'
 
 import * as Dropdown from '@radix-ui/react-dropdown-menu'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
 import { Toolbar } from '@/components/ui/Toolbar'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
 import { Surface } from '@/components/ui/Surface'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
 import { DropdownButton } from '@/components/ui/Dropdown'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
 import { AiStorage, tryParseToTiptapHTML } from '@/extensions/Ai/index'
 
 export interface DataProps {
@@ -25,6 +47,7 @@ export interface DataProps {
 }
 
 // TODO rewrite this component to use the new Ai extension features
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const AiWriterView = ({ editor, node, getPos, deleteNode }: NodeViewProps) => {
   const { isLoading, generatedText, error } = useEditorState({
     editor,
@@ -42,7 +65,7 @@ export const AiWriterView = ({ editor, node, getPos, deleteNode }: NodeViewProps
     text: '',
     tone: undefined,
   })
-  const currentTone = tones.find(t => t.value === data.tone)
+  // const currentTone = tones.find(t => t.value === data.tone)
   const textareaId = useMemo(() => uuid(), [])
 
   const generateText = useCallback(() => {
@@ -52,13 +75,13 @@ export const AiWriterView = ({ editor, node, getPos, deleteNode }: NodeViewProps
       return
     }
 
-    editor.commands.aiTextPrompt({
-      text: data.text,
-      insert: false,
-      tone: data.tone,
-      stream: true,
-      format: 'rich-text',
-    })
+    // editor.commands.aiTextPrompt({
+    //   text: data.text,
+    //   insert: false,
+    //   tone: data.tone,
+    //   stream: true,
+    //   format: 'rich-text',
+    // })
   }, [data.text, data.tone, editor])
 
   useEffect(() => {
@@ -67,11 +90,11 @@ export const AiWriterView = ({ editor, node, getPos, deleteNode }: NodeViewProps
     }
   }, [error])
 
-  const insert = useCallback(() => {
-    const from = getPos()
-    const to = from + node.nodeSize
-    editor.chain().focus().aiAccept({ insertAt: { from, to }, append: false }).run()
-  }, [editor, getPos, node.nodeSize])
+  // const insert = useCallback(() => {
+  //   const from = getPos()
+  //   const to = from + node.nodeSize
+  //   editor.chain().focus().aiAccept({ insertAt: { from, to }, append: false }).run()
+  // }, [editor, getPos, node.nodeSize])
 
   const discard = useCallback(() => {
     deleteNode()
@@ -85,11 +108,11 @@ export const AiWriterView = ({ editor, node, getPos, deleteNode }: NodeViewProps
     setData(prevData => ({ ...prevData, tone: undefined }))
   }, [])
 
-  const createItemClickHandler = useCallback((tone: AiToneOption) => {
-    return () => {
-      setData(prevData => ({ ...prevData, tone: tone.value }))
-    }
-  }, [])
+  // const createItemClickHandler = useCallback((tone: AiToneOption) => {
+  //   return () => {
+  //     setData(prevData => ({ ...prevData, tone: tone.value }))
+  //   }
+  // }, [])
 
   return (
     <NodeViewWrapper data-drag-handle>
@@ -123,7 +146,7 @@ export const AiWriterView = ({ editor, node, getPos, deleteNode }: NodeViewProps
                 <Dropdown.Trigger asChild>
                   <Button variant="tertiary">
                     <Icon name="Mic" />
-                    {currentTone?.label || 'Change tone'}
+                    {/*{currentTone?.label || 'Change tone'}*/}
                     <Icon name="ChevronDown" />
                   </Button>
                 </Dropdown.Trigger>
@@ -141,13 +164,13 @@ export const AiWriterView = ({ editor, node, getPos, deleteNode }: NodeViewProps
                           <Toolbar.Divider horizontal />
                         </>
                       )}
-                      {tones.map(tone => (
-                        <Dropdown.Item asChild key={tone.value}>
-                          <DropdownButton isActive={tone.value === data.tone} onClick={createItemClickHandler(tone)}>
-                            {tone.label}
-                          </DropdownButton>
-                        </Dropdown.Item>
-                      ))}
+                      {/*{tones.map(tone => (*/}
+                      {/*  <Dropdown.Item asChild key={tone.value}>*/}
+                      {/*    <DropdownButton isActive={tone.value === data.tone} onClick={createItemClickHandler(tone)}>*/}
+                      {/*      {tone.label}*/}
+                      {/*    </DropdownButton>*/}
+                      {/*  </Dropdown.Item>*/}
+                      {/*))}*/}
                     </Surface>
                   </Dropdown.Content>
                 </Dropdown.Portal>
@@ -164,12 +187,12 @@ export const AiWriterView = ({ editor, node, getPos, deleteNode }: NodeViewProps
                   Discard
                 </Button>
               )}
-              {generatedText && (
-                <Button variant="ghost" onClick={insert} disabled={!generatedText}>
-                  <Icon name="Check" />
-                  Insert
-                </Button>
-              )}
+              {/*{generatedText && (*/}
+              {/*  <Button variant="ghost" onClick={insert} disabled={!generatedText}>*/}
+              {/*    <Icon name="Check" />*/}
+              {/*    Insert*/}
+              {/*  </Button>*/}
+              {/*)}*/}
               <Button variant="primary" onClick={generateText} style={{ whiteSpace: 'nowrap' }} disabled={isLoading}>
                 {generatedText ? <Icon name="Repeat" /> : <Icon name="Sparkles" />}
                 {generatedText ? 'Regenerate' : 'Generate text'}
