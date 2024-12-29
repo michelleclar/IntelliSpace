@@ -1,6 +1,8 @@
 import { BubbleMenu as BaseBubbleMenu, useEditorState } from '@tiptap/react'
 import React, { useCallback, useRef } from 'react'
 import { Instance, sticky } from 'tippy.js'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
 import { v4 as uuid } from 'uuid'
 
 import { Toolbar } from '@/components/editor/components/ui/Toolbar'
