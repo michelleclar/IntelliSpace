@@ -67,7 +67,7 @@ export const DocumentItem = ({
   level = 0,
   parentDocumentId,
 }: DocumentItemProps) => {
-  const { documents, isLoading: documentsIsLoading } = useGetDocuments({
+  const { documents} = useGetDocuments({
     parentDocumentId,
   });
 
@@ -80,7 +80,7 @@ export const DocumentItem = ({
       [documentId]: !prevExpanded[documentId],
     }));
   };
-  const dynamicMarginTop = calculateLeaveSpacing(0);
+  // const dynamicMarginTop = calculateLeaveSpacing(0);
 
   const router = useRouter();
 

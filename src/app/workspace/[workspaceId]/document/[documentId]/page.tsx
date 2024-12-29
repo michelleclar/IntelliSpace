@@ -14,7 +14,7 @@ import { useUpdateDocument } from "@/features/document/api/use-update-document";
 import { useDocumentId } from "@/hooks/use-document-id";
 import { toast } from "sonner";
 import { useGetDocument } from "@/features/document/api/use-get-document";
-import { Loader, TriangleAlert } from "lucide-react";
+import { Loader } from "lucide-react";
 
 const useDarkmode = () => {
   const [isDarkMode, setIsDarkMode] = useState<boolean>(
@@ -51,9 +51,9 @@ const useDarkmode = () => {
 
 export default function Document({ params }: { params: { room: string } }) {
   const { isDarkMode, darkMode, lightMode } = useDarkmode();
-  const [aiToken, setAiToken] = useState<string | null | undefined>();
+  // const [aiToken, setAiToken] = useState<string | null | undefined>();
 
-  const { mutate, isPending } = useUpdateDocument();
+  const { mutate} = useUpdateDocument();
   const documentId = useDocumentId();
   const { data: _document, isLoading: isLoadingDocument } = useGetDocument({
     documentId,
@@ -69,39 +69,39 @@ export default function Document({ params }: { params: { room: string } }) {
   // TODO: only manipulate own doc
   // TODO: trash only show self doc
 
-  useEffect(() => {
-    // fetch data
-    const dataFetch = async () => {
-      try {
-        const response = await fetch("/api/ai", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error(
-            "No AI token provided, please set TIPTAP_AI_SECRET in your environment",
-          );
-        }
-        const data = await response.json();
-
-        const { token } = data;
-
-        // set state when the data received
-        setAiToken(token);
-      } catch (e) {
-        if (e instanceof Error) {
-          console.error(e.message);
-        }
-        setAiToken(null);
-        return;
-      }
-    };
-
-    dataFetch();
-  }, []);
+  // useEffect(() => {
+  //   // fetch data
+  //   const dataFetch = async () => {
+  //     try {
+  //       const response = await fetch("/api/ai", {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //       });
+  //
+  //       if (!response.ok) {
+  //         throw new Error(
+  //           "No AI token provided, please set TIPTAP_AI_SECRET in your environment",
+  //         );
+  //       }
+  //       const data = await response.json();
+  //
+  //       const { token } = data;
+  //
+  //       // set state when the data received
+  //       setAiToken(token);
+  //     } catch (e) {
+  //       if (e instanceof Error) {
+  //         console.error(e.message);
+  //       }
+  //       setAiToken(null);
+  //       return;
+  //     }
+  //   };
+  //
+  //   dataFetch();
+  // }, []);
   const onUpdate = (content: string) => {
     mutate(
       { content, id: documentId },

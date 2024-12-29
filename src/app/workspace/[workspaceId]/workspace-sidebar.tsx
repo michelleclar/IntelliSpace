@@ -24,9 +24,6 @@ import { useCanvasId } from "@/hooks/use-canvas-id";
 import { useGetChatbots } from "@/features/chatbot/api/use-get-chatbots";
 import { useChatbotId } from "@/hooks/use-chatbot-id";
 import { useCreateChatbotModal } from "@/features/chatbot/store/use-create-chatbot-model";
-import { useGetDocuments } from "@/features/document/api/use-get-documents";
-import { useDocumentId } from "@/hooks/use-document-id";
-import { useState } from "react";
 import { DocumentItem } from "@/app/workspace/[workspaceId]/document-item";
 import { useCreateDocumentModal } from "@/features/document/store/use-create-document-model";
 
