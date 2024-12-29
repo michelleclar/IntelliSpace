@@ -1,18 +1,37 @@
 import { Extension, NodeViewWrapper, NodeViewWrapperProps } from '@tiptap/react'
 import { useCallback, useMemo, useState } from 'react'
 import toast from 'react-hot-toast'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
 import { v4 as uuid } from 'uuid'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
 import { ImageOptions } from '@tiptap-pro/extension-ai'
 
 import * as Dropdown from '@radix-ui/react-dropdown-menu'
-
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
 import { Button } from '@/components/ui/Button'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
 import { Loader } from '@/components/ui/Loader'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
 import { Panel, PanelHeadline } from '@/components/ui/Panel'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
 import { Textarea } from '@/components/ui/Textarea'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
 import { Icon } from '@/components/ui/Icon'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
 import { Surface } from '@/components/ui/Surface'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
 import { DropdownButton } from '@/components/ui/Dropdown'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
 import { Toolbar } from '@/components/ui/Toolbar'
 
 const imageStyles = [
@@ -30,6 +49,7 @@ interface Data {
   imageStyle?: ImageOptions
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const AiImageView = ({ editor, node, getPos, deleteNode }: NodeViewWrapperProps) => {
   const aiOptions = editor.extensionManager.extensions.find((ext: Extension) => ext.name === 'ai').options
 

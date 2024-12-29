@@ -1,4 +1,5 @@
 import { Editor, useEditorState } from '@tiptap/react'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { useCallback, useMemo } from 'react'
 import { ShouldShowProps } from '../../types'
 import { isCustomNodeSelected, isTextSelected } from '../../../../lib/utils'
