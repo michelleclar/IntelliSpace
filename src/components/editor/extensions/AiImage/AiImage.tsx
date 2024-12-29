@@ -1,5 +1,6 @@
 import { mergeAttributes, Node } from '@tiptap/core'
 import { ReactNodeViewRenderer } from '@tiptap/react'
+// @ts-ignore
 import { v4 as uuid } from 'uuid'
 
 import { AiImageView } from './components/AiImageView'
