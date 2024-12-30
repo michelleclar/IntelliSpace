@@ -8,6 +8,7 @@ type RequestType = {
   content?: string;
   id: Id<"document">;
   isPublish?: boolean;
+  title?: string;
 };
 
 type Options = {

@@ -13,6 +13,7 @@ import {
   MoreHorizontal,
   Plus,
   Trash,
+  Pencil,
 } from "lucide-react";
 
 import { useRouter } from "next/navigation";
@@ -30,6 +31,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useArchiveDocument } from "@/features/document/api/use-archive-document";
 import { useCreateDocumentModal } from "@/features/document/store/use-create-document-model";
+import { useUpdateDocumentModal } from "@/features/document/store/use-update-document-model";
 
 // const sidebarItemVariants = cva(
 //   "flex items-center gap-1.5 justify-start font-normal h-7 px-[18px] text-sm overflow-hidden",
@@ -67,7 +69,7 @@ export const DocumentItem = ({
   level = 0,
   parentDocumentId,
 }: DocumentItemProps) => {
-  const { documents} = useGetDocuments({
+  const { documents } = useGetDocuments({
     parentDocumentId,
   });
 
@@ -153,8 +155,8 @@ const Item = ({
   // const { mutate: createDocument } = useCreateDocument();
   const { mutate: archiveDocument } = useArchiveDocument();
   const workspaceId = useWorkspaceId();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [___, setDocumentOpen] = useCreateDocumentModal();
+  const [createModelFlag, setDocumentOpen] = useCreateDocumentModal();
+  const [updateModelFlag, setUpdateDocumentOpen] = useUpdateDocumentModal();
 
   const router = useRouter();
   const ChevronIcon = expanded ? ChevronDown : ChevronRight;
@@ -165,27 +167,6 @@ const Item = ({
     event.stopPropagation();
     onExpand?.();
   };
-
-  // const onCreate = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-  //   event.stopPropagation();
-  //   if (!id) {
-  //     return;
-  //   }
-  //   createDocument(
-  //     { title: "Untitled", workspaceId },
-  //     {
-  //       onSuccess(id) {
-  //         toast.success("Document created successfully");
-  //         if (!expanded) onExpand?.();
-  //         router.push(`/workspace/${workspaceId}/canvas/${id}`);
-  //       },
-  //       onError() {
-  //         toast.error("Failed to create document");
-  //       },
-  //       onSettled() {},
-  //     },
-  //   );
-  // };
 
   const onArchive = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.stopPropagation();
@@ -259,6 +240,13 @@ const Item = ({
                 <Trash className="h-4 w-4 mr-2" />
                 Delete
               </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => setUpdateDocumentOpen(!updateModelFlag)}
+              >
+                <Pencil className="h-4 w-4 mr-2" />
+                Rename
+              </DropdownMenuItem>
+
               <DropdownMenuSeparator />
               <div className="text-xs text-muted-foreground p-2">
                 Last edited by: user?.username
@@ -267,7 +255,7 @@ const Item = ({
           </DropdownMenu>
           <div
             role="button"
-            onClick={() => setDocumentOpen(true)}
+            onClick={() => setDocumentOpen(createModelFlag)}
             className="opacity-0 group-hover:opacity-100 h-full ml-auto rounded-sm hover:bg-neutral-300 dark:hover:bg-neutral-600"
           >
             <Plus className="h-4 w-4 text-muted-foreground" />

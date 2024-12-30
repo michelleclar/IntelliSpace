@@ -5,7 +5,8 @@ import { CreateCanvasModal } from "@/features/canvas/components/create-canvas-mo
 import { CreateChannelModal } from "@/features/channels/components/create-channel-modal";
 import { CreateChatbotModal } from "@/features/chatbot/components/create-chatbot-modal";
 import { CreateWorkspaceModal } from "@/features/workspaces/components/create-woekspace-modal";
-import { CreateDocumentModal } from "@/features/document/components/create-canvas-modal";
+import { CreateDocumentModal } from "@/features/document/components/create-document-modal";
+import { UpdateDocumentModal } from "@/features/document/components/update-document-modal";
 
 export function Modals() {
   const [mounted, setMounted] = useState(false);
@@ -21,6 +22,7 @@ export function Modals() {
       <CreateCanvasModal />
       <CreateChatbotModal />
       <CreateDocumentModal />
+      <UpdateDocumentModal />
     </>
   );
 }

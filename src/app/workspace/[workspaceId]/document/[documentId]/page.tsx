@@ -16,41 +16,75 @@ import { toast } from "sonner";
 import { useGetDocument } from "@/features/document/api/use-get-document";
 import { Loader } from "lucide-react";
 
-const useDarkmode = () => {
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(
+const useLightmode = () => {
+  const [isLightMode, setIsLightMode] = useState<boolean>(
     typeof window !== "undefined"
-      ? window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? window.matchMedia("(prefers-color-scheme: light)").matches
       : false,
   );
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    const handleChange = () => setIsDarkMode(mediaQuery.matches);
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: light)");
+    const handleChange = () => setIsLightMode(mediaQuery.matches);
     mediaQuery.addEventListener("change", handleChange);
     return () => mediaQuery.removeEventListener("change", handleChange);
   }, []);
 
   useEffect(() => {
-    document.documentElement.classList.toggle("dark", isDarkMode);
-  }, [isDarkMode]);
+    document.documentElement.classList.toggle("light", isLightMode);
+  }, [isLightMode]);
 
   const toggleDarkMode = useCallback(
-    () => setIsDarkMode((isDark) => !isDark),
+    () => setIsLightMode((isLight) => !isLight),
     [],
   );
-  const lightMode = useCallback(() => setIsDarkMode(false), []);
-  const darkMode = useCallback(() => setIsDarkMode(true), []);
+  const lightMode = useCallback(() => setIsLightMode(false), []);
+  const darkMode = useCallback(() => setIsLightMode(true), []);
 
   return {
-    isDarkMode,
+    isLightMode,
     toggleDarkMode,
     lightMode,
     darkMode,
   };
 };
 
+// const useDarkmode = () => {
+//   const [isDarkMode, setIsDarkMode] = useState<boolean>(
+//     typeof window !== "undefined"
+//       ? window.matchMedia("(prefers-color-scheme: dark)").matches
+//       : false,
+//   );
+//
+//   useEffect(() => {
+//     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+//     const handleChange = () => setIsDarkMode(mediaQuery.matches);
+//     mediaQuery.addEventListener("change", handleChange);
+//     return () => mediaQuery.removeEventListener("change", handleChange);
+//   }, []);
+//
+//   useEffect(() => {
+//     document.documentElement.classList.toggle("dark", isDarkMode);
+//   }, [isDarkMode]);
+//
+//   const toggleDarkMode = useCallback(
+//     () => setIsDarkMode((isDark) => !isDark),
+//     [],
+//   );
+//   const lightMode = useCallback(() => setIsDarkMode(false), []);
+//   const darkMode = useCallback(() => setIsDarkMode(true), []);
+//
+//   return {
+//     isDarkMode,
+//     toggleDarkMode,
+//     lightMode,
+//     darkMode,
+//   };
+// };
+
 export default function Document({ params }: { params: { room: string } }) {
-  const { isDarkMode, darkMode, lightMode } = useDarkmode();
+  // const { isDarkMode, darkMode, lightMode } = useDarkmode();
+  const { isLightMode, darkMode, lightMode } = useLightmode();
   const [aiToken, setAiToken] = useState<string | null | undefined>();
 
   const { mutate } = useUpdateDocument();
@@ -124,10 +158,10 @@ export default function Document({ params }: { params: { room: string } }) {
 
   const DarkModeSwitcher = createPortal(
     <Surface className="flex items-center gap-1 fixed bottom-6 right-6 z-[99999] p-1">
-      <Toolbar.Button onClick={lightMode} active={!isDarkMode}>
+      <Toolbar.Button onClick={lightMode} active={isLightMode}>
         <Icon name="Sun" />
       </Toolbar.Button>
-      <Toolbar.Button onClick={darkMode} active={isDarkMode}>
+      <Toolbar.Button onClick={darkMode} active={!isLightMode}>
         <Icon name="Moon" />
       </Toolbar.Button>
     </Surface>,
