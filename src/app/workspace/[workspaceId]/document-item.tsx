@@ -188,7 +188,7 @@ const Item = ({
                 onSuccess() {
                     toast.success("Document archive successfully");
                     if (!expanded) onExpand?.();
-                    router.push(`/workspace/${workspaceId}/document`);
+                    router.push(`/workspace/${workspaceId}`);
                 },
                 onError() {
                     toast.error("Failed to archive document");
