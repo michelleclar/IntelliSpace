@@ -255,7 +255,7 @@ const Item = ({
           </DropdownMenu>
           <div
             role="button"
-            onClick={() => setDocumentOpen(createModelFlag)}
+            onClick={() => setDocumentOpen(!createModelFlag)}
             className="opacity-0 group-hover:opacity-100 h-full ml-auto rounded-sm hover:bg-neutral-300 dark:hover:bg-neutral-600"
           >
             <Plus className="h-4 w-4 text-muted-foreground" />
