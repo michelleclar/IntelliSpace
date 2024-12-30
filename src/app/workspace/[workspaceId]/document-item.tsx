@@ -299,10 +299,9 @@ const CreateDocumentModal = ({open,setOpen}:{open:boolean,setOpen: Dispatch<SetS
     };
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log(title);
 
         mutate(
-            {parentDocument:documentId, workspaceId,title:"untitled"},
+            {parentDocument:documentId, workspaceId,title},
             {
                 onSuccess(id) {
                     toast.success("document created successfully");
