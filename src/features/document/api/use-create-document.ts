@@ -7,6 +7,7 @@ type ResponseType = Id<"document"> | null;
 type RequestType = {
   content?: string;
   title: string;
+  parentDocument?: Id<"document">;
   workspaceId: Id<"workspaces">;
 };
 
